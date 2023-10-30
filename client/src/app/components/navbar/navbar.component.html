@@ -1,0 +1,19 @@
+<!-- navbar.component.html -->
+
+<nav class="sticky top-0 left-0 w-full bg-custom-bg p-4 shadow-md z-10">
+  <div class="container mx-auto flex justify-between items-center">
+    <img src="../../../assets/Wave_logo_RGB.png" alt="Wave Logo" class="h-16 w-40">
+    <div class="flex items-center">
+      <span class="mr-4 text-gray-600">{{ userEmail }}</span>
+      <div class="relative group">
+        <button (click)="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 bg-blue-600 text-white px-3 py-2 rounded">
+          <span>{{ userEmail }}</span>
+          <span>▼</span>
+        </button>
+        <div [ngClass]="{ 'hidden': !dropdownOpen }" class="absolute right-0 mt-2 w-48 bg-white shadow-md">
+          <button class="block w-full text-left px-4 py-2 hover:bg-gray-200" (click)="logout(); dropdownOpen = false">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

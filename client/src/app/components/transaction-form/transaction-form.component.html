@@ -1,0 +1,56 @@
+<!-- transaction-form.component.html -->
+
+<div [class.hidden]="!show" class="fixed top-0 left-0 w-full h-full flex justify-center items-center">
+    <div
+        class="bg-white rounded-lg p-8 w-11/12 max-w-3xl">
+        <!-- Title based on the type -->
+        <h2 class="text-2xl font-bold mb-4">
+            {{ type === "deposit" ? "Add Income" : "Add Expense" }}
+        </h2>
+
+        <!-- Form Structure -->
+        <form
+            [formGroup]="transactionForm" (ngSubmit)="onSave()">
+            <!-- Date input -->
+            <label class="block mb-2">Date</label>
+            <input
+            type="date" formControlName="date" class="mb-4 border rounded w-full p-2"/>
+
+            <!-- Description -->
+            <label class="block mb-2">Description</label>
+            <input
+            type="text" formControlName="description" placeholder="Write a Description" class="mb-4 border rounded w-full p-2"/>
+
+            <!-- Account dropdown -->
+            <label class="block mb-2">Account</label>
+            <select formControlName="account" class="mb-4 border rounded w-full p-2">
+                <option *ngFor="let account of filteredAccounts" [value]="account">{{ account }}</option>
+            </select>
+            
+            <!-- Category dropdown -->
+            <label class="block mb-2">Category</label>
+            <select formControlName="category" class="mb-4 border rounded w-full p-2">
+                <option *ngFor="let category of filteredCategories" [value]="category?.account_name">{{ category?.account_name }}</option>
+            </select>
+            
+
+            <!-- Amount -->
+            <label class="block mb-2">Amount</label>
+            <input type="number" formControlName="amount" placeholder="0" class="mb-4 border rounded w-full p-2"/>
+            <!-- Other inputs similar to the provided image -->
+
+            <!-- Save and Cancel Buttons -->
+                <div class="mt-6 flex justify-end"> <button class="py-2 px-4 bg-gray-300 text-black rounded mr-2" (click)="onClose()">
+                    Cancel
+                </button>
+                <button class="py-2 px-4 bg-green-500 text-white rounded" *ngIf="type === 'deposit'">
+                    Save
+                </button>
+                <button class="py-2 px-4 bg-red-500 text-white rounded" *ngIf="type === 'withdrawal'">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+

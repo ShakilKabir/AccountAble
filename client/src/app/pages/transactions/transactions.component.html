@@ -1,0 +1,58 @@
+<!-- transactions.component.html -->
+
+<div
+    class="flex-grow p-8 bg-gray-100 overflow-y-auto">
+
+    <!-- Top Bar -->
+    <div class="flex justify-between mb-6">
+        <button class="py-2 px-4 bg-blue-500 text-white rounded">Import transactions</button>
+        <span class="font-bold text-xl">Transactions</span>
+        <button class="py-2 px-4 bg-blue-500 text-white rounded">Connect your bank</button>
+    </div>
+
+    <!-- Transaction Total and Actions -->
+    <div class="flex justify-between mb-6">
+        <span class="font-semibold text-lg">All accounts: $15,006.50</span>
+        <div>
+            <button class="py-2 px-4 bg-green-500 text-white rounded mr-2" (click)="toggleIncomeModal()">Add income</button>
+            <button class="py-2 px-4 bg-red-500 text-white rounded mr-2" (click)="toggleExpenseModal()">Add expense</button>
+            <button class="py-2 px-4 bg-blue-500 text-white rounded">Add Journal Transaction</button>
+            <!-- ... other buttons ... -->
+        </div>
+    </div>
+
+    <!-- Transactions Table with a max height and scrollability -->
+    <div class="overflow-auto max-h-[calc(100vh-20rem)]">
+        <table class="min-w-full bg-white border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="py-2 px-4 border-b">Date</th>
+                    <th class="py-2 px-4 border-b">Description</th>
+                    <th class="py-2 px-4 border-b">Account</th>
+                    <th class="py-2 px-4 border-b">Category</th>
+                    <th class="py-2 px-4 border-b">Amount</th>
+                    <th class="py-2 px-4 border-b">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let transaction of transactions">
+                    <td class="py-2 px-4 border-b">{{ transaction.date | date:'mediumDate'}}</td>
+                    <td class="py-2 px-4 border-b">{{ transaction.description }}</td>
+                    <td class="py-2 px-4 border-b">{{ transaction.account }}</td>
+                    <td class="py-2 px-4 border-b">{{ transaction.category }}</td>
+                    <td class="py-2 px-4 border-b">{{ transaction.amount }}</td>
+                    <td
+                        class="py-2 px-4 border-b"><!-- Action buttons/icons here -->
+                        <button class="bg-red-500 text-white rounded px-2 py-1" (click)="deleteTransaction(transaction._id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modals remain the same ... -->
+    <app-transaction-form *ngIf="showIncomeModal" [show]="showIncomeModal" type="deposit" (close)="toggleIncomeModal()" (transactionAdded)="loadTransactions()"></app-transaction-form>
+
+    <app-transaction-form *ngIf="showExpenseModal" [show]="showExpenseModal" type="withdrawal" (close)="toggleExpenseModal()" (transactionAdded)="loadTransactions()"></app-transaction-form>
+
+</div>
