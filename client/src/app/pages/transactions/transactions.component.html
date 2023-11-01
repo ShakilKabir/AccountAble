@@ -1,7 +1,7 @@
 <!-- transactions.component.html -->
 
 <div
-    class="flex-grow p-8 bg-gray-100 overflow-y-auto">
+    class="flex-grow p-8 bg-gray-100 overflow-y-auto"  [class.blur]="isAnyModalOpen">
 
     <!-- Top Bar -->
     <div class="flex justify-between mb-6">
@@ -16,7 +16,7 @@
         <div>
             <button class="py-2 px-4 bg-green-500 text-white rounded mr-2" (click)="toggleIncomeModal()">Add income</button>
             <button class="py-2 px-4 bg-red-500 text-white rounded mr-2" (click)="toggleExpenseModal()">Add expense</button>
-            <button class="py-2 px-4 bg-blue-500 text-white rounded">Add Journal Transaction</button>
+            <button class="py-2 px-4 bg-blue-500 text-white rounded" (click)="toggleJournalModal()">Add Journal Transaction</button>
             <!-- ... other buttons ... -->
         </div>
     </div>
@@ -28,18 +28,18 @@
                 <tr class="bg-gray-200">
                     <th class="py-2 px-4 border-b">Date</th>
                     <th class="py-2 px-4 border-b">Description</th>
-                    <th class="py-2 px-4 border-b">Account</th>
-                    <th class="py-2 px-4 border-b">Category</th>
+                    <th class="py-2 px-4 border-b">Debit</th>
+                    <th class="py-2 px-4 border-b">Credit</th>
                     <th class="py-2 px-4 border-b">Amount</th>
                     <th class="py-2 px-4 border-b">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let transaction of transactions">
+                <tr *ngFor="let transaction of transactions" class="text-center">
                     <td class="py-2 px-4 border-b">{{ transaction.date | date:'mediumDate'}}</td>
                     <td class="py-2 px-4 border-b">{{ transaction.description }}</td>
-                    <td class="py-2 px-4 border-b">{{ transaction.account }}</td>
-                    <td class="py-2 px-4 border-b">{{ transaction.category }}</td>
+                    <td class="py-2 px-4 border-b">{{ transaction.debit_account_name }}</td>
+                    <td class="py-2 px-4 border-b">{{ transaction.credit_account_name }}</td>
                     <td class="py-2 px-4 border-b">{{ transaction.amount }}</td>
                     <td
                         class="py-2 px-4 border-b"><!-- Action buttons/icons here -->
@@ -51,8 +51,9 @@
     </div>
 
     <!-- Modals remain the same ... -->
-    <app-transaction-form *ngIf="showIncomeModal" [show]="showIncomeModal" type="deposit" (close)="toggleIncomeModal()" (transactionAdded)="loadTransactions()"></app-transaction-form>
-
-    <app-transaction-form *ngIf="showExpenseModal" [show]="showExpenseModal" type="withdrawal" (close)="toggleExpenseModal()" (transactionAdded)="loadTransactions()"></app-transaction-form>
-
 </div>
+<app-transaction-form *ngIf="showIncomeModal" [show]="showIncomeModal" type="deposit" (close)="toggleIncomeModal()" (transactionAdded)="loadTransactions()"></app-transaction-form>
+
+<app-transaction-form *ngIf="showExpenseModal" [show]="showExpenseModal" type="withdrawal" (close)="toggleExpenseModal()" (transactionAdded)="loadTransactions()"></app-transaction-form>
+
+<app-transaction-form *ngIf="showJournalModal" [show]="showJournalModal" type="journal" (close)="toggleJournalModal()" (transactionAdded)="loadTransactions()"></app-transaction-form>

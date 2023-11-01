@@ -1,0 +1,113 @@
+<!-- pages/cash-flow-statement.component.html -->
+
+<div class="bg-white min-h-screen p-8 px-60">
+
+    <!-- Top Bar: Title and Export Button -->
+    <div class="flex justify-between items-center p-4 border-b">
+        <h1 class="text-3xl font-bold">Cash Flow Statement</h1>
+        <button class="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Export</button>
+    </div>
+
+    <!-- Filters and Controls -->
+    <div class="flex justify-between items-center p-4 bg-white border-b mt-4">
+        <!-- Date Range, Compare to a prior period, Report Type -->
+        <div class="flex gap-4">
+            <select class="border p-2 rounded">
+                <option>2023</option>
+                <!-- Add other years as options if needed -->
+            </select>
+            <input type="date" class="border p-2 rounded" value="2023-01-01">
+            <input type="date" class="border p-2 rounded" value="2023-10-29">
+        </div>
+        <button class="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Update Report</button>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="p-4 bg-white mt-4">
+        <div class="grid grid-cols-5 gap-4 mb-6 px-12">
+            <!-- Income -->
+            <div>
+                <div class="font-bold text-sm mb-1">Gross Cash Inflow</div>
+                <div class="text-3xl">{{ cashFlowData.grossCashInflow | currency}}</div>
+            </div>
+            <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-minus"></i></div>
+            <!-- Cost of Goods Sold -->
+            <div>
+                <div class="font-bold text-sm mb-1">Gross Cash Outflow</div>
+                <div class="text-3xl">{{ cashFlowData.grossCashOutflow | currency}}</div>
+            </div>
+            <div class="flex items-center justify-center">
+                <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-equals"></i></div>
+            </div>
+            <!-- Net Profit -->
+            <div>
+                <div class="font-bold text-sm mb-1">Net Cash Change</div>
+                <div class="text-3xl text-blue-400">{{ cashFlowData.grossCashInflow - cashFlowData.grossCashOutflow | currency}}</div>
+            </div>
+        </div>
+        <!-- Tabs for Summary and Details -->
+        <div class="flex border-b mb-4 justify-center">
+            <button class="py-2 px-4 font-bold border-b-2 border-blue-500 text-2xl">Summary</button>
+            <!-- Additional tabs can be added here -->
+        </div>
+
+        <!-- Table -->
+        <table class="w-full text-xl">
+            <tr class="bg-gray-200">
+                <td colspan="2" class="font-bold py-2">CASH INFLOW AND OUTFLOW</td>
+                <td class="text-right font-bold py-2">Jan 01, 2023 to Oct 31, 2023</td>
+            </tr>
+
+            <!-- Operating Activities -->
+            <tr >
+                <td colspan="2" class="font-bold py-2">Net Cash from Operating Activities</td>
+                <td class="text-right py-2">{{ cashFlowData.cashFlowFromOperatingActivities | currency }}</td>
+            </tr>
+
+            <!-- Investing Activities -->
+            <tr>
+                <td colspan="2" class="font-bold py-2">Net Cash from Investing Activities</td>
+                <td class="text-right py-2">{{ cashFlowData.cashFlowFromInvestingActivities | currency }}</td>
+            </tr>
+
+            <!-- Financing Activities -->
+            <tr>
+                <td colspan="2" class="font-bold py-2">Net Cash from Financing Activities</td>
+                <td class="text-right py-2">{{ cashFlowData.cashFlowFromFinancingActivities | currency }}</td>
+            </tr>
+
+            <!-- Net Increase/Decrease in Cash -->
+            <tr >
+                <td colspan="2" class="font-bold py-2">Net Increase/Decrease in Cash</td>
+                <td class="text-right py-2">{{ cashFlowData.grossCashInflow - cashFlowData.grossCashOutflow | currency }}</td>
+            </tr>
+
+            <!-- Overview -->
+            <tr class="bg-gray-200">
+                <td colspan="2" class="py-2 font-bold">OVERVIEW</td>
+                <td class="text-right py-2"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="py-2">Starting Balance</td>
+                <td class="text-right py-2">{{ cashFlowData.openingBalance | currency }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="py-2">Gross Cash Inflow</td>
+                <td class="text-right py-2">{{ cashFlowData.grossCashInflow | currency }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="py-2">Gross Cash Outflow</td>
+                <td class="text-right py-2">{{ cashFlowData.grossCashOutflow | currency }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="py-2">Net Cash Change</td>
+                <td class="text-right py-2">{{ cashFlowData.grossCashInflow - cashFlowData.grossCashOutflow | currency }}</td>
+            </tr>
+            <tr class="bg-gray-200">
+                <td colspan="2" class="py-2">Ending Balance</td>
+                <td class="text-right py-2">{{ cashFlowData.closingBalance | currency }}</td>
+            </tr>
+        </table>      
+
+    </div>
+</div>

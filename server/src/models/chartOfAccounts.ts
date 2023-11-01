@@ -12,6 +12,7 @@ const chartOfAccountsSchema = new mongoose.Schema({
   },
   subtype: { type: String },
   description: { type: String },
+  balance: { type: Number, default: 0 },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 

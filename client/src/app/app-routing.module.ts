@@ -11,6 +11,7 @@ import { TransactionsComponent } from './pages/transactions/transactions.compone
 import { AuthLayoutComponent } from './components/auth-layout/auth-layout.component';
 import { ChartOfAccountsComponent } from './pages/chart-of-accounts/chart-of-accounts.component';
 import { IncomeStatementComponent } from './pages/income-statement/income-statement.component';
+import { CashFlowStatementComponent } from './pages/cash-flow-statement/cash-flow-statement.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -36,6 +37,10 @@ const routes: Routes = [
       {
         path: 'income-statement',
         component: IncomeStatementComponent
+      },
+      {
+        path: 'cash-flow-statement',
+        component: CashFlowStatementComponent
       }
     ]
   },

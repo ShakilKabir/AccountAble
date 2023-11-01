@@ -14,6 +14,11 @@ export class TransactionsComponent implements OnInit {
 
   public showIncomeModal = false;
   public showExpenseModal = false;
+  public showJournalModal = false;
+
+  get isAnyModalOpen(): boolean {
+    return this.showIncomeModal || this.showExpenseModal || this.showJournalModal;
+  }
 
   toggleIncomeModal() {
       this.showIncomeModal = !this.showIncomeModal;
@@ -22,6 +27,11 @@ export class TransactionsComponent implements OnInit {
   toggleExpenseModal() {
       this.showExpenseModal = !this.showExpenseModal;
   }
+
+  toggleJournalModal() {
+      this.showJournalModal = !this.showJournalModal;
+  }
+
   constructor(private transactionService: TransactionService) { }
 
 

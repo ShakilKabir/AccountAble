@@ -2,15 +2,14 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionService {
 
-  private apiUrl = 'http://localhost:3000/api/transactions'; // Assuming your backend is running on port 3000
-
+  private apiUrl = 'http://localhost:3000/api/transactions';
 
 
   constructor(private http: HttpClient) { }
@@ -56,7 +55,15 @@ export class TransactionService {
     return this.http.get(`${this.apiUrl}/income-statement`, httpOptions);
   }
   
+  getCashFlowStatement(): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
+      })
+    };
+    return this.http.get(`${this.apiUrl}/cash-flow-statement`, httpOptions)
+  }
 
 
-  // You can add more methods here to handle other CRUD operations
 }
