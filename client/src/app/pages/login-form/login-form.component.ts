@@ -25,11 +25,9 @@ export class LoginFormComponent implements OnInit {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.authService.login( email, password).subscribe(response => {
-        // On successful login, navigate to dashboard or any protected route
         this.router.navigate(['/dashboard']);
         console.log(this.loginForm.value);
       }, error => {
-        // Handle any errors, like incorrect email or password
       });
       this.loginForm.reset();
     }

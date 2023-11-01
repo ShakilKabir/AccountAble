@@ -22,7 +22,6 @@ const transactionSchema = new mongoose.Schema({
 
 
 transactionSchema.pre('save', async function (next) {
-  // 'this' is the transaction document about to be saved
   const debitAccount = await ChartOfAccounts.findById(this.debit_account_type);
   const creditAccount = await ChartOfAccounts.findById(this.credit_account_type);
 
@@ -30,27 +29,22 @@ transactionSchema.pre('save', async function (next) {
     throw new Error('Account not found');
   }
 
-  // Determine the effect on the accounts
   if (debitAccount.account_type === 'Asset' || debitAccount.account_type === 'Expense') {
-    debitAccount.balance += this.amount; // Debiting asset/expenses increases the balance
+    debitAccount.balance += this.amount; 
   } else {
-    debitAccount.balance -= this.amount; // Debiting liabilities/equity/revenue decreases the balance
+    debitAccount.balance -= this.amount;
   }
 
   if (creditAccount.account_type === 'Liability' || creditAccount.account_type === 'Equity' || creditAccount.account_type === 'Revenue') {
-    creditAccount.balance += this.amount; // Crediting liabilities/equity/revenue increases the balance
+    creditAccount.balance += this.amount; 
   } else {
-    creditAccount.balance -= this.amount; // Crediting asset/expenses decreases the balance
+    creditAccount.balance -= this.amount; 
   }
 
-  // Save the updated account balances
   await debitAccount.save();
   await creditAccount.save();
 
   next();
 });
-
-// ... existing code ...
-
 
 export default mongoose.model('Transaction', transactionSchema);

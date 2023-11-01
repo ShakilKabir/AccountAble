@@ -1,16 +1,13 @@
 <div
     class="bg-white min-h-screen p-8 px-60">
 
-    <!-- Top Bar: Title and Export Button -->
     <div class="flex justify-between items-center p-4 border-b">
         <h1 class="text-3xl font-bold">Profit & Loss</h1>
         <button class="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Export</button>
     </div>
 
-    <!-- Filters and Controls -->
     <div
         class="flex justify-between items-center p-4 bg-white border-b mt-4">
-        <!-- Date Range, Compare to a prior period, Report Type -->
         <div class="flex gap-4">
             <select class="border p-2 rounded">
                 <option>2023</option>
@@ -24,36 +21,30 @@
             <div class="p-4 bg-white mt-4">
                 <div
                     class="grid grid-cols-7 gap-4 mb-6 px-12">
-                    <!-- Income -->
                     <div>
                         <div class="font-bold text-sm mb-1">Income</div>
                         <div class="text-3xl">{{totalRevenue | currency}}</div>
                     </div>
                     <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-minus"></i></div>
-                    <!-- Cost of Goods Sold -->
                     <div>
                         <div class="font-bold text-sm mb-1">Cost of Goods Sold</div>
                         <div class="text-3xl">$0.00</div>
                     </div>
                     <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-minus"></i></div>
 
-                    <!-- Operating Expenses -->
                     <div>
                         <div class="font-bold text-sm mb-1">Operating Expenses</div>
                         <div class="text-3xl">{{totalExpense | currency}}</div>
                     </div>
-                    <!-- Equal Sign (Just a visual representation) -->
                     <div class="flex items-center justify-center">
                         <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-equals"></i></div>
                     </div>
 
-                    <!-- Net Profit -->
                     <div>
                         <div class="font-bold text-sm mb-1">Net Profit</div>
                         <div class="text-3xl text-blue-400">{{netIncome | currency}}</div>
                     </div>
                 </div>
-                <!-- Tabs for Summary and Details -->
                 <div class="flex border-b 
                 mb-4 justify-center">
                     <button class="py-2 px-4 font-bold border-b-2 border-blue-500 text-2xl">Summary</button>

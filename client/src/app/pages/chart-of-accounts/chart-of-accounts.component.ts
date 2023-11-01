@@ -12,7 +12,7 @@ import { ChartOfAccountsService } from '../../services/chart-of-accounts.service
   ]
 })
 export class ChartOfAccountsComponent implements OnInit {
-  accounts: any[] = []; // This will store our accounts
+  accounts: any[] = [];
   
   constructor(private chartOfAccountsService: ChartOfAccountsService) {}
 
@@ -38,7 +38,6 @@ export class ChartOfAccountsComponent implements OnInit {
       account_name: accountName,
       account_type: accountType,
       subtype: accountSubtype
-      // Add user_id and other fields if necessary
     };
   
     this.chartOfAccountsService.addAccount(accountData).subscribe(

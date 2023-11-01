@@ -8,7 +8,7 @@ import { initializeDefaultAccounts } from '../models/chartOfAccounts';
 
 const router = express.Router();
 
-router.use(verifyToken); // Place this at the beginning to apply middleware to all routes in this router
+router.use(verifyToken); 
 
 router.get('/', async (req, res) => {
   try {
@@ -18,10 +18,8 @@ router.get('/', async (req, res) => {
         return res.status(400).send({ message: 'User ID not provided' });
       }
 
-    // Try fetching accounts
     let accounts = await ChartOfAccounts.find({ user_id: userId });
 
-    // If no accounts are found, create default accounts
     if (!accounts.length) {
       accounts = await initializeDefaultAccounts(userId) as any;
     }
@@ -52,7 +50,6 @@ router.put('/:account_id', async (req, res) => {
 });
 
 router.delete('/:account_id', async (req, res) => {
-  // Implement deletion logic (checking for transactions, etc.) before this.
   try {
     await ChartOfAccounts.findByIdAndRemove(req.params.account_id);
     res.status(200).send({ message: 'Account deleted' });

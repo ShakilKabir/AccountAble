@@ -52,7 +52,6 @@ export class TransactionsComponent implements OnInit {
   deleteTransaction(id: string): void {
     this.transactionService.deleteTransaction(id).subscribe(
       () => {
-        // Reload transactions after a successful delete
         this.loadTransactions();
       },
       error => {

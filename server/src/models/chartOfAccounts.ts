@@ -158,7 +158,6 @@ export const initializeDefaultAccounts = async (userId: string) => {
       account_type: 'Equity',
       description: 'Earnings not distributed to shareholders and reinvested in the business',
     },
-    // ... You can add or modify accounts as needed to fit the business context
   ];
 
   return ChartOfAccounts.insertMany(predefinedAccounts);

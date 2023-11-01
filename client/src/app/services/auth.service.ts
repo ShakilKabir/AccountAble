@@ -10,7 +10,6 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
   
-  // Assuming you're running your backend on localhost:3000, adjust as needed
   private API_URL: string = 'http://localhost:3000/api/auth';
 
   constructor(private http: HttpClient) {
@@ -25,7 +24,6 @@ export class AuthService {
   login(email: string, password: string) {
     return this.http.post<any>(`${this.API_URL}/login`, { email, password })
       .pipe(map(user => {
-        // store user details and jwt token in local storage
         if (user && user.token) {
           console.log(user);
           localStorage.setItem('currentUser', JSON.stringify(user));
@@ -36,7 +34,6 @@ export class AuthService {
   }
 
   logout() {
-    // remove user from local storage
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }

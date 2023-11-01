@@ -5,7 +5,6 @@ import { TransactionService } from 'src/app/services/transaction.service';
 @Component({
   selector: 'app-cash-flow-statement',
   templateUrl: './cash-flow-statement.component.html',
-  // Styles array is omitted for brevity
 })
 export class CashFlowStatementComponent implements OnInit {
   cashFlowData: any = {

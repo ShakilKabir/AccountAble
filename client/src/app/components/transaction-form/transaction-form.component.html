@@ -16,19 +16,15 @@
             <input
             type="date" formControlName="date" class="mb-4 border rounded w-full p-2"/>
 
-            <!-- Conditional Description based on the type -->
             <label class="block mb-2">Description</label>
             <input
             type="text" formControlName="description" placeholder="Write a Description" class="mb-4 border rounded w-full p-2"/>
 
-            <!-- Conditional Account based on the type -->
             <label class="block mb-2">{{ type === 'journal' ? 'Debit Account' : 'Account' }}</label>
             <select formControlName="account" class="mb-4 border rounded w-full p-2">
                 <option *ngFor="let account of filteredAccounts" [value]="isString(account) ? account: account.account_name">{{ isString(account) ? account: account.account_name }}</option>
             </select>
 
-
-            <!-- Conditional Category based on the type -->
             <label class="block mb-2">{{ type === 'journal' ? 'Credit Account' : 'Category' }}</label>
             <select formControlName="category" class="mb-4 border rounded w-full p-2">
                 <option *ngFor="let category of filteredCategories" [value]="category?.account_name">{{ category?.account_name }}</option>
@@ -46,12 +42,10 @@
                 </select>
             </div>
 
-            <!-- Amount -->
             <label class="block mb-2">Amount</label>
             <input
             type="number" formControlName="amount" placeholder="0" class="mb-4 border rounded w-full p-2"/>
 
-            <!-- Save and Cancel Buttons -->
             <div class="mt-6 flex justify-end">
                 <button class="py-2 px-4 bg-gray-300 text-black rounded mr-2" (click)="onClose()">
                     Cancel

@@ -11,9 +11,9 @@ import { ChartOfAccountsService } from '../../services/chart-of-accounts.service
 })
 export class TransactionFormComponent implements OnInit {
 
-  @Input() type: 'deposit' | 'withdrawal' | 'journal' = 'deposit'; // input to determine if it's a deposit or withdrawal
+  @Input() type: 'deposit' | 'withdrawal' | 'journal' = 'deposit'; 
   @Input() show: boolean = false;
-  @Output() close = new EventEmitter<void>(); // emit an event to close the modal
+  @Output() close = new EventEmitter<void>();
   @Output() transactionAdded = new EventEmitter<void>();
 
   transactionForm: FormGroup;
@@ -68,7 +68,7 @@ export class TransactionFormComponent implements OnInit {
     Object.keys(this.transactionForm.controls).forEach(key => {
       const control = this.transactionForm.get(key);
   
-      if (control && control.errors) { // Added check for control to be non-null
+      if (control && control.errors) {
           Object.keys(control.errors).forEach(keyError => {
               console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', control.errors![keyError]);
           });
