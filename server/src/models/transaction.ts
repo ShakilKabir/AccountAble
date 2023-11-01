@@ -20,9 +20,6 @@ const transactionSchema = new mongoose.Schema({
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
-// models/transaction.ts
-
-// ... existing code ...
 
 transactionSchema.pre('save', async function (next) {
   // 'this' is the transaction document about to be saved

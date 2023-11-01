@@ -108,10 +108,8 @@ router.delete('/:transaction_id', async (req, res) => {
 
 
 router.get('/income-statement', async (req, res) => {
-  console.log('Processing GET request for /', req.userId);
   try {
       const userId = req.userId;
-      console.log('userId', userId)
 
       // Fetch account entries for Revenue and Expense types
       const revenueAccounts = await ChartOfAccounts.find({ account_type: 'Revenue', user_id: userId });
@@ -160,8 +158,6 @@ router.get('/cash-flow-statement', async (req, res) => {
     cashAffectingTransactions.forEach(transaction => {
       const isDebitToCash = transaction.debit_account_name === 'Cash';
       const amount = isDebitToCash ? transaction.amount : -transaction.amount;
-      console.log('amount', amount)
-      console.log('transaction.cash_flow_category', transaction.cash_flow_category)
 
       // Update cash flow based on category
       switch (transaction.cash_flow_category) {
@@ -205,21 +201,60 @@ router.get('/cash-flow-statement', async (req, res) => {
 router.get('/balance-sheet', async (req, res) => {
   try {
     const userId = req.userId;
+    
+    // 1. Fetch the total revenues and total expenses for the user.
+    const revenueAccounts = await ChartOfAccounts.find({ account_type: 'Revenue', user_id: userId });
+    const expenseAccounts = await ChartOfAccounts.find({ account_type: 'Expense', user_id: userId });
+
+    const totalRevenue = revenueAccounts.reduce((acc, account) => acc + account.balance, 0);
+    const totalExpense = expenseAccounts.reduce((acc, account) => acc + account.balance, 0);
+    
+    // 2. Calculate the net income.
+    const netIncome = totalRevenue - totalExpense;
+
     const assets = await ChartOfAccounts.find({ user_id: userId, account_type: 'Asset' });
     const liabilities = await ChartOfAccounts.find({ user_id: userId, account_type: 'Liability' });
     const equity = await ChartOfAccounts.find({ user_id: userId, account_type: 'Equity' });
 
+    const totalCash = assets.filter(a => a.account_name === 'Cash').reduce((acc, a) => acc + a.balance, 0);
+    const totalOtherCurrentAsset = assets.filter(a => a.subtype === 'Current Asset' && a.account_name !== 'Cash').reduce((acc, a) => acc + a.balance, 0);
+    const totalLongTermAssets = assets.filter(a => a.subtype === 'Non-Current Asset').reduce((acc, a) => acc + a.balance, 0);
+    const totalAssets = totalCash + totalOtherCurrentAsset + totalLongTermAssets;
+
+    const totalCurrentLiabilities = liabilities.filter(l => l.subtype === 'Current Liability').reduce((acc, l) => acc + l.balance, 0);
+    const totalLongTermLiabilities = liabilities.filter(l => l.subtype === 'Long-Term Liability').reduce((acc, l) => acc + l.balance, 0);
+    const totalLiabilities = totalCurrentLiabilities + totalLongTermLiabilities;
+
+    const retainedEarningsAccount = equity.find(e => e.account_name === 'Retained Earnings');
+    const retainedEarnings = retainedEarningsAccount ? retainedEarningsAccount.balance : 0;
+
+    // 3. Add the net income to the retained earnings.
+    const totalRetainedEarnings = retainedEarnings + netIncome;
+
+    const totalOtherEquity = equity.filter(e => e.account_name !== 'Retained Earnings' && e.account_name !== 'Owner’s Capital').reduce((acc, e) => acc + e.balance, 0);
+
     const balanceSheet = {
-      assets: assets.map(a => ({ name: a.account_name, balance: a.balance })),
-      liabilities: liabilities.map(l => ({ name: l.account_name, balance: l.balance })),
-      equity: equity.map(e => ({ name: e.account_name, balance: e.balance }))
+      totalCash,
+      totalOtherCurrentAsset,
+      totalLongTermAssets,
+      totalAssets,
+      totalCurrentLiabilities,
+      totalLongTermLiabilities,
+      totalLiabilities,
+      totalOtherEquity,
+      totalRetainedEarnings, // This now includes net income
+      netIncome
     };
+
+    console.log(balanceSheet);
 
     res.status(200).send(balanceSheet);
   } catch (err) {
     res.status(400).send(err);
   }
 });
+
+
 
 
 

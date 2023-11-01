@@ -20,6 +20,7 @@ import { AuthLayoutComponent } from './components/auth-layout/auth-layout.compon
 import { ChartOfAccountsComponent } from './pages/chart-of-accounts/chart-of-accounts.component';
 import { IncomeStatementComponent } from './pages/income-statement/income-statement.component';
 import { CashFlowStatementComponent } from './pages/cash-flow-statement/cash-flow-statement.component';
+import { BalanceSheetComponent } from './pages/balance-sheet/balance-sheet.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { CashFlowStatementComponent } from './pages/cash-flow-statement/cash-flo
     ChartOfAccountsComponent,
     IncomeStatementComponent,
     CashFlowStatementComponent,
+    BalanceSheetComponent,
   ],
   imports: [
     BrowserModule,

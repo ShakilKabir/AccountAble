@@ -1,0 +1,98 @@
+<!-- pages/balance-sheet.component.html -->
+
+<div
+    class="bg-white min-h-screen p-8 px-60">
+
+    <!-- Top Bar: Title and Export Button -->
+    <div class="flex justify-between items-center p-4 border-b">
+        <h1 class="text-3xl font-bold">Balance Sheet</h1>
+        <button class="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Export</button>
+    </div>
+
+    <!-- Filters and Controls -->
+    <div
+        class="flex justify-between items-center p-4 bg-white border-b mt-4">
+        <!-- Date Range, Compare to a prior period, Report Type -->
+        <div class="flex gap-4">
+            <select class="border p-2 rounded">
+                <option>2023</option>
+            </select>
+            <input type="date" class="border p-2 rounded" value="2023-01-01">
+                <input type="date" class="border p-2 rounded" value="2023-10-29"></div>
+                <button class="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Update Report</button>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="p-4 bg-white mt-4">
+                <div class="grid grid-cols-5 gap-4 mb-6 px-12">
+                    <!-- Total Assets -->
+                    <div>
+                        <div class="font-bold text-sm mb-1">Total Assets</div>
+                        <div class="text-3xl">{{totalAssets | currency}}</div>
+                    </div>
+                    <!-- Equal Sign (Just a visual representation) -->
+                    <div class="flex items-center justify-center">
+                        <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-equals"></i></div>
+                    </div>
+                    <!-- Liabilities -->
+                    <div>
+                        <div class="font-bold text-sm mb-1">Liabilities</div>
+                        <div class="text-3xl">{{totalLiabilities | currency}}</div>
+                    </div>
+                    <!-- Plus Sign (Just a visual representation) -->
+                    <div class="flex items-center justify-center">
+                        <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-plus"></i></div>
+                    </div>
+                    <!-- Equity -->
+                    <div>
+                        <div class="font-bold text-sm mb-1">Equity</div>
+                        <div class="text-3xl">{{totalEquity | currency}}</div>
+                    </div>
+                    <!-- Placeholder divs for alignment -->
+                    <div></div>
+                    <div></div>
+                </div>
+                
+                <!-- Tabs for Summary and Details -->
+                <div class="flex border-b 
+                mb-4 justify-center">
+                    <button class="py-2 px-4 font-bold border-b-2 border-blue-500 text-2xl">Summary</button>
+                </div>
+
+                <!-- Table -->
+                <table class="w-full text-xl mt-4">
+                    <!-- Assets Section -->
+                    <tr class="bg-gray-200">
+                        <td colspan="3" class="font-bold py-2">Assets</td>
+                    </tr>
+                    <ng-container *ngFor="let asset of assets">
+                        <tr>
+                            <td class="pl-4" colspan="2" class="py-2">{{asset.name}}</td>
+                            <td class="text-right py-2">{{asset.balance | currency}}</td>
+                        </tr>
+                    </ng-container>
+            
+                    <!-- Liabilities Section -->
+                    <tr class="bg-gray-200">
+                        <td colspan="3" class="font-bold py-2">Liabilities</td>
+                    </tr>
+                    <ng-container *ngFor="let liability of liabilities">
+                        <tr>
+                            <td class="pl-4" colspan="2" class="py-2">{{liability.name}}</td>
+                            <td class="text-right py-2">{{liability.balance | currency}}</td>
+                        </tr>
+                    </ng-container>
+            
+                    <!-- Equity Section -->
+                    <tr class="bg-gray-200">
+                        <td colspan="3" class="font-bold py-2">Equity</td>
+                    </tr>
+                    <ng-container *ngFor="let equityItem of equity">
+                        <tr>
+                            <td class="pl-4" colspan="2" class="py-2">{{equityItem.name}}</td>
+                            <td class="text-right py-2">{{equityItem.balance | currency}}</td>
+                        </tr>
+                    </ng-container>
+                </table>
+            </div>
+        </div>

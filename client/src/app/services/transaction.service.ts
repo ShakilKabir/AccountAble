@@ -65,5 +65,14 @@ export class TransactionService {
     return this.http.get(`${this.apiUrl}/cash-flow-statement`, httpOptions)
   }
 
+  getBalanceSheet(): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
+      })
+    };
+    return this.http.get(`${this.apiUrl}/balance-sheet`, httpOptions);
+  }
 
 }
