@@ -7,7 +7,10 @@ module.exports = {
     extend: {
       backgroundColor: {
         'custom-bg': '#F9F4F1',
-      }
+      },
+      fontFamily: {
+        impact: ['Impact', 'sans-serif'],
+      },
     },
   },
   plugins: [],

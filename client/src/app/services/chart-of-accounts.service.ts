@@ -9,7 +9,8 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ChartOfAccountsService {
-  private apiUrl = 'http://localhost:3000/api/chart-of-accounts'; // Backend API URL
+  private apiUrl = 'http://localhost:3000/api/chart-of-accounts';
+  private ratiosUrl = 'http://localhost:3000/api/financial-ratios';
 
   constructor(private http: HttpClient) {}
 
@@ -33,6 +34,16 @@ addAccount(accountData: any): Observable<any> {
     })
   };
   return this.http.post(this.apiUrl, accountData, httpOptions);
+}
+
+getFinancialRatios() {
+  const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
+    })
+  };
+  return this.http.get<any>(this.ratiosUrl, httpOptions);
 }
 
 }

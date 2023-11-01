@@ -38,7 +38,6 @@ export class IncomeStatementComponent implements OnInit {
     this.totalRevenue = this.transactions[0].reduce((acc: number, transaction: Transaction) => acc + (transaction.amount || 0), 0);
     this.totalExpense = this.transactions[1].reduce((acc: number, transaction: Transaction) => acc + (transaction.amount || 0), 0);
     this.netIncome = this.totalRevenue - this.totalExpense;
-    console.log(this.totalRevenue, this.totalExpense, this.netIncome)
   }
   
 }

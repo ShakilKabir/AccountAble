@@ -21,6 +21,7 @@ import { ChartOfAccountsComponent } from './pages/chart-of-accounts/chart-of-acc
 import { IncomeStatementComponent } from './pages/income-statement/income-statement.component';
 import { CashFlowStatementComponent } from './pages/cash-flow-statement/cash-flow-statement.component';
 import { BalanceSheetComponent } from './pages/balance-sheet/balance-sheet.component';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { BalanceSheetComponent } from './pages/balance-sheet/balance-sheet.compo
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    CanvasJSAngularChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
