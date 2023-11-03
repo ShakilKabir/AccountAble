@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-cash-flow-statement',
@@ -40,5 +42,18 @@ export class CashFlowStatementComponent implements OnInit {
         console.error('There was an error retrieving the cash flow statement', error);
       }
     );
+  }
+  
+  exportAsPDF(divId: string) {
+    const data = document.getElementById(divId);
+    html2canvas(data!).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const imgProps= pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('cash-flow-statement.pdf');
+    });
   }
 }

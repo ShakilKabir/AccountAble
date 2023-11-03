@@ -3,6 +3,8 @@
 import { TransactionService } from 'src/app/services/transaction.service';
 import { Component, OnInit } from '@angular/core';
 import { Transaction } from 'src/app/models/transaction';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-income-statement',
@@ -34,6 +36,7 @@ export class IncomeStatementComponent implements OnInit {
     this.transactionService.getIncomeStatement().subscribe({
       next: (data: any[]) => {
         // Filter transactions based on the date range
+        console.log(data)
         this.transactions = [
           this.filterTransactionsByDate(data[0]),
           this.filterTransactionsByDate(data[1])
@@ -61,5 +64,19 @@ export class IncomeStatementComponent implements OnInit {
     this.totalExpense = this.transactions[1].reduce((acc: number, transaction: Transaction) => acc + (transaction.amount || 0), 0);
     this.netIncome = this.totalRevenue - this.totalExpense;
   }
+
+  exportAsPDF(divId: string) {
+    const data = document.getElementById(divId);
+    html2canvas(data!).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const imgProps= pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('income-statement.pdf');
+    });
+  }
+  
   
 }

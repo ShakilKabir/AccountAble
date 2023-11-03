@@ -3,6 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -85,5 +86,19 @@ export class TransactionService {
       }),
     };
     return this.http.get(`${this.apiUrl}/balance-sheet`, httpOptions);
+  }
+
+  
+  getBalanceSheetByDate(date: Date): Observable<any> {
+    const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'x-access-token':
+          JSON.parse(localStorage.getItem('currentUser') || '{}').token || '',
+      }),
+      params: new HttpParams().set('date', formattedDate),
+    };
+    return this.http.get(`${this.apiUrl}/balance-sheet-by-date`, httpOptions);
   }
 }

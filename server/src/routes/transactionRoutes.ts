@@ -4,6 +4,7 @@ import express from 'express';
 import Transaction from '../models/transaction';
 import verifyToken from '../middleware/authMiddleware';
 import { ChartOfAccounts } from '../models/chartOfAccounts';
+import { Types } from 'mongoose';
 
 const router = express.Router();
 
@@ -236,13 +237,113 @@ router.get('/balance-sheet', async (req, res) => {
       netIncome
     };
 
-    console.log(balanceSheet);
-
     res.status(200).send(balanceSheet);
   } catch (err) {
     res.status(400).send(err);
   }
 });
+
+router.get('/balance-sheet-by-date', async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { date } = req.query; // The date query parameter is expected to be provided
+
+    if (!date || typeof date !== 'string') {
+      return res.status(400).send({ message: 'Please provide a date query parameter.' });
+    }
+
+    // Convert query parameter to a date object
+    const endDate = new Date(date);
+
+    // Get all transactions up to the end date
+    const transactions = await Transaction.find({
+      user_id: userId,
+      date: { $lte: endDate },
+    })
+
+    // Function to calculate the account balance by iterating over transactions
+    const calculateAccountBalance = (accountId :Types.ObjectId, accountType:string) => {
+      return transactions.reduce((acc, transaction) => {
+        const affectsDebit = transaction.debit_account_type.equals(accountId);
+        const affectsCredit = transaction.credit_account_type.equals(accountId);
+    
+        // If the account is of type 'Asset' or 'Expense', then debits increase the balance and credits decrease it.
+        if (accountType === 'Asset' || accountType === 'Expense') {
+          if (affectsDebit) {
+            return acc + transaction.amount; // Debit increases asset & expense
+          } else if (affectsCredit) {
+            return acc - transaction.amount; // Credit decreases asset & expense
+          }
+        }
+        // If the account is of type 'Liability', 'Equity', or 'Revenue', then credits increase the balance and debits decrease it.
+        else if (accountType === 'Liability' || accountType === 'Equity' || accountType === 'Revenue') {
+          if (affectsCredit) {
+            return acc + transaction.amount; // Credit increases liability, equity & revenue
+          } else if (affectsDebit) {
+            return acc - transaction.amount; // Debit decreases liability, equity & revenue
+          }
+        }
+    
+        return acc;
+      }, 0);
+    };
+    
+
+    // Fetch the current chart of accounts
+    const chartOfAccounts = await ChartOfAccounts.find({ user_id: userId });
+
+    // Calculate historical balances for each account
+    const historicalBalances = chartOfAccounts.map(account => ({
+      ...account.toJSON(),
+      historical_balance: calculateAccountBalance(account._id, account.account_type)
+    }));
+    console.log(historicalBalances);
+
+    // Use the historicalBalances to calculate the fields for the balance sheet
+    // ... repeat logic from '/balance-sheet' here but with historical_balances ...
+
+    // Example of calculations with historical_balances
+    const totalRevenue = historicalBalances.filter(a => a.account_type === 'Revenue').reduce((acc, a) => acc + a.historical_balance, 0);
+    const totalExpense = historicalBalances.filter(a => a.account_type === 'Expense').reduce((acc, a) => acc + a.historical_balance, 0);
+    const netIncome = totalRevenue - totalExpense;
+
+    const totalCash = historicalBalances.filter(a => a.account_name === 'Cash').reduce((acc, a) => acc + a.historical_balance, 0);
+    const totalOtherCurrentAsset = historicalBalances.filter(a => a.subtype === 'Current Asset' && a.account_name !== 'Cash').reduce((acc, a) => acc + a.historical_balance, 0);
+    const totalLongTermAssets = historicalBalances.filter(a => a.subtype === 'Non-Current Asset').reduce((acc, a) => acc + a.historical_balance, 0);
+    const totalAssets = totalCash + totalOtherCurrentAsset + totalLongTermAssets;
+
+    const totalCurrentLiabilities = historicalBalances.filter(l => l.subtype === 'Current Liability').reduce((acc, l) => acc + l.historical_balance, 0);
+    const totalLongTermLiabilities = historicalBalances.filter(l => l.subtype === 'Long-Term Liability').reduce((acc, l) => acc + l.historical_balance, 0);
+    const totalLiabilities = totalCurrentLiabilities + totalLongTermLiabilities;
+    
+    const totalOwnerCapital = historicalBalances.filter(e => e.account_name === 'Owner’s Capital').reduce((acc, e) => acc + e.historical_balance, 0);
+    const retainedEarningsAccount = historicalBalances.find(e => e.account_name === 'Retained Earnings');
+    const retainedEarnings = retainedEarningsAccount ? retainedEarningsAccount.historical_balance : 0;
+    const totalRetainedEarnings = retainedEarnings + netIncome;
+
+    const totalOtherEquity = historicalBalances.filter(e => e.account_type==='Equity' && e.account_name !== 'Retained Earnings' && e.account_name !== 'Owner’s Capital').reduce((acc, e) => acc + e.historical_balance, 0);
+
+    const balanceSheet = {
+      totalCash,
+      totalOtherCurrentAsset,
+      totalLongTermAssets,
+      totalAssets,
+      totalCurrentLiabilities,
+      totalLongTermLiabilities,
+      totalLiabilities,
+      totalOwnerCapital,
+      totalOtherEquity,
+      totalRetainedEarnings,
+      netIncome
+    };
+
+    res.status(200).send(balanceSheet);
+
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 
 
 
