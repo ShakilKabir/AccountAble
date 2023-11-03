@@ -14,7 +14,7 @@ const transactionSchema = new mongoose.Schema({
   affects_cash: { type: Boolean, default: false },
   cash_flow_category: {
     type: String,
-    enum: ['Operating', 'Investing', 'Financing', 'None'], // 'None' for non-cash transactions
+    enum: ['Operating', 'Investing', 'Financing', 'None'],
     required: true
   },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }

@@ -1,5 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ChartOfAccountsService } from 'src/app/services/chart-of-accounts.service';
+import { TransactionService } from 'src/app/services/transaction.service';
+import Lottie from 'lottie-web';
+import animationData from '../../../assets/lottie/animation.json'
 
 @Component({
   selector: 'app-dashboard',
@@ -12,9 +15,13 @@ export class DashboardComponent implements OnInit {
   expenseChart:any[]= [];
   expenses = {};
   financialRatios:any ={};
+  hasTransactions: boolean = false;
+  private animationItem: any;
 
   constructor(
     private chartOfAccountsService: ChartOfAccountsService,
+    private transactionService: TransactionService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +45,40 @@ export class DashboardComponent implements OnInit {
       }
     );
     this.fetchFinancialRatios();
+    this.checkForTransactions();
+  }
+
+  ngAfterViewInit(): void {
+    const lottieContainer = document.getElementById('lottie');
+    
+    if (lottieContainer) {
+      this.animationItem = Lottie.loadAnimation({
+        container: lottieContainer,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        animationData: animationData as any,
+      });
+    } else {
+      console.error('Lottie container not found');
+    }
+    this.cdr.detectChanges();
+  }
+
+  
+  checkForTransactions(): void {
+    this.transactionService.getTransactions().subscribe(
+      transactions => {
+        this.hasTransactions = transactions && transactions.length > 0;
+      },
+      error => {
+        console.error('Error fetching transactions:', error);
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.animationItem.destroy();
   }
 
   getChartOptions(value : any[], text?: string, subtitle?: string) {

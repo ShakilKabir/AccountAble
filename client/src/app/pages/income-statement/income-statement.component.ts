@@ -14,18 +14,30 @@ export class IncomeStatementComponent implements OnInit {
   totalRevenue: number = 0;
   totalExpense: number = 0;
   netIncome: number = 0;
+  startDate: string='';
+  endDate: string='';
 
   constructor(private transactionService: TransactionService) {}
 
   ngOnInit() {
+    const currentDate = new Date();
+  this.endDate = currentDate.toISOString().split('T')[0];
+  this.startDate = new Date(new Date().getFullYear(), 0, 1).toLocaleDateString('sv-SE', { timeZone: 'Asia/Dhaka' });
     this.loadTransactions();
+  }
+
+  updateReport() {
+    this.loadTransactions(); // This will reload transactions based on new filter dates
   }
 
   loadTransactions() {
     this.transactionService.getIncomeStatement().subscribe({
       next: (data: any[]) => {
-        this.transactions = data;
-        console.log(this.transactions, data)
+        // Filter transactions based on the date range
+        this.transactions = [
+          this.filterTransactionsByDate(data[0]),
+          this.filterTransactionsByDate(data[1])
+        ];
         this.calculateTotals();
       },
       error: (err) => {
@@ -33,6 +45,16 @@ export class IncomeStatementComponent implements OnInit {
       }
     });
   }
+  
+  filterTransactionsByDate(transactions: any[]) {
+    return transactions.filter(transaction => {
+      const transactionDate = new Date(transaction.date);
+      const start = new Date(this.startDate);
+      const end = new Date(this.endDate);
+      return transactionDate >= start && transactionDate <= end;
+    });
+  }
+  
 
   calculateTotals() {
     this.totalRevenue = this.transactions[0].reduce((acc: number, transaction: Transaction) => acc + (transaction.amount || 0), 0);

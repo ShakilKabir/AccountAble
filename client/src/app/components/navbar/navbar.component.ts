@@ -10,15 +10,12 @@ import { Router } from '@angular/router';
   styleUrls: []
 })
 export class NavbarComponent implements OnInit {
-  userEmail: string = '';
-  dropdownOpen: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+
+  }
 
   ngOnInit(): void {
-    this.userEmail = this.authService.currentUserValue?.email || '';
-    console.log('Current user:', this.authService.currentUserValue);
-    console.log('Email:', this.userEmail);
   }
   
   

@@ -132,6 +132,7 @@ router.get('/income-statement', async (req, res) => {
 router.get('/cash-flow-statement', async (req, res) => {
   try {
     const userId = req.userId;
+    const { startDate, endDate } = req.query
     const openingBalance = 0;
     let cashFlowFromOperatingActivities = 0;
     let cashFlowFromInvestingActivities = 0;
@@ -142,6 +143,10 @@ router.get('/cash-flow-statement', async (req, res) => {
     const cashAffectingTransactions = await Transaction.find({
       user_id: userId,
       affects_cash: true,
+      date: {
+        $gte: startDate || new Date(new Date().getFullYear(), 0, 1),  // default to year start if no startDate is provided
+        $lte: endDate || new Date(),  // default to current date if no endDate is provided
+      }
     });
 
     cashAffectingTransactions.forEach(transaction => {
@@ -208,7 +213,8 @@ router.get('/balance-sheet', async (req, res) => {
     const totalCurrentLiabilities = liabilities.filter(l => l.subtype === 'Current Liability').reduce((acc, l) => acc + l.balance, 0);
     const totalLongTermLiabilities = liabilities.filter(l => l.subtype === 'Long-Term Liability').reduce((acc, l) => acc + l.balance, 0);
     const totalLiabilities = totalCurrentLiabilities + totalLongTermLiabilities;
-
+    
+    const totalOwnerCapital = equity.filter(e => e.account_name === 'Owner’s Capital').reduce((acc, e) => acc + e.balance, 0);
     const retainedEarningsAccount = equity.find(e => e.account_name === 'Retained Earnings');
     const retainedEarnings = retainedEarningsAccount ? retainedEarningsAccount.balance : 0;
 
@@ -224,6 +230,7 @@ router.get('/balance-sheet', async (req, res) => {
       totalCurrentLiabilities,
       totalLongTermLiabilities,
       totalLiabilities,
+      totalOwnerCapital,
       totalOtherEquity,
       totalRetainedEarnings,
       netIncome

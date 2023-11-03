@@ -12,6 +12,7 @@ const chartOfAccountsSchema = new mongoose.Schema({
   },
   subtype: { type: String },
   description: { type: String },
+  balance: { type: Number, default: 0 },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
@@ -35,38 +36,10 @@ export const initializeDefaultAccounts = async (userId: string) => {
     },
     {
       user_id: userId,
-      account_name: 'Inventory',
-      account_type: 'Asset',
-      subtype: 'Current Asset',
-      description: 'Goods available for sale to customers',
-    },
-    {
-      user_id: userId,
-      account_name: 'Prepaid Expenses',
-      account_type: 'Asset',
-      subtype: 'Current Asset',
-      description: 'Expenses paid in advance such as insurance',
-    },
-    {
-      user_id: userId,
-      account_name: 'Equipment',
-      account_type: 'Asset',
-      subtype: 'Non-Current Asset',
-      description: 'Long-term assets such as machinery and equipment',
-    },
-    {
-      user_id: userId,
       account_name: 'Building',
       account_type: 'Asset',
       subtype: 'Non-Current Asset',
       description: 'Real estate owned by the company',
-    },
-    {
-      user_id: userId,
-      account_name: 'Land',
-      account_type: 'Asset',
-      subtype: 'Non-Current Asset',
-      description: 'Cost of land owned by the company',
     },
     {
       user_id: userId,
@@ -77,31 +50,10 @@ export const initializeDefaultAccounts = async (userId: string) => {
     },
     {
       user_id: userId,
-      account_name: 'Accrued Expenses',
-      account_type: 'Liability',
-      subtype: 'Current Liability',
-      description: 'Expenses that have been incurred but not yet paid',
-    },
-    {
-      user_id: userId,
-      account_name: 'Unearned Revenue',
-      account_type: 'Liability',
-      subtype: 'Current Liability',
-      description: 'Payments received from customers for services yet to be delivered',
-    },
-    {
-      user_id: userId,
       account_name: 'Notes Payable',
       account_type: 'Liability',
       subtype: 'Long-Term Liability',
       description: 'Amounts owed that are due more than one year in the future',
-    },
-    {
-      user_id: userId,
-      account_name: 'Mortgage Payable',
-      account_type: 'Liability',
-      subtype: 'Long-Term Liability',
-      description: 'Long-term loans taken out on property',
     },
     {
       user_id: userId,
@@ -111,39 +63,9 @@ export const initializeDefaultAccounts = async (userId: string) => {
     },
     {
       user_id: userId,
-      account_name: 'Service Revenue',
-      account_type: 'Revenue',
-      description: 'Income from services provided to customers',
-    },
-    {
-      user_id: userId,
-      account_name: 'Interest Revenue',
-      account_type: 'Revenue',
-      description: 'Income earned from investments and interest-bearing accounts',
-    },
-    {
-      user_id: userId,
       account_name: 'Rent Expense',
       account_type: 'Expense',
       description: 'Periodic payments for rental of property or equipment',
-    },
-    {
-      user_id: userId,
-      account_name: 'Utilities Expense',
-      account_type: 'Expense',
-      description: 'Costs of utilities such as electricity, water, and internet',
-    },
-    {
-      user_id: userId,
-      account_name: 'Salaries Expense',
-      account_type: 'Expense',
-      description: 'Wages paid to employees',
-    },
-    {
-      user_id: userId,
-      account_name: 'Depreciation Expense',
-      account_type: 'Expense',
-      description: 'Allocation of the cost of tangible assets over their useful lives',
     },
     {
       user_id: userId,
@@ -157,304 +79,7 @@ export const initializeDefaultAccounts = async (userId: string) => {
       account_type: 'Equity',
       description: 'Earnings not distributed to shareholders and reinvested in the business',
     },
-    // ... You can add or modify accounts as needed to fit the business context
   ];
 
   return ChartOfAccounts.insertMany(predefinedAccounts);
 };
-//models/transaction.ts
-
-import mongoose from 'mongoose';
-
-const transactionSchema = new mongoose.Schema({
-  date: { type: Date, default: Date.now },
-  debit_account_type: { type: mongoose.Schema.Types.ObjectId, ref: 'ChartOfAccounts', required: true },
-  debit_account_name: { type: String, required: true },
-  amount: { type: Number, required: true },
-  credit_account_type: { type: mongoose.Schema.Types.ObjectId, ref: 'ChartOfAccounts', required: true },
-  credit_account_name: { type: String, required: true },
-  description: { type: String },
-  affects_cash: { type: Boolean, default: false },
-  cash_flow_category: {
-    type: String,
-    enum: ['Operating', 'Investing', 'Financing', 'None'], // 'None' for non-cash transactions
-    required: true
-  },
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
-});
-
-export default mongoose.model('Transaction', transactionSchema);
-
-
-// routes/chartOfAccountsRoutes.ts
-
-import express from 'express';
-import {ChartOfAccounts} from '../models/chartOfAccounts';
-import verifyToken from '../middleware/authMiddleware';
-import { initializeDefaultAccounts } from '../models/chartOfAccounts';
-
-
-const router = express.Router();
-
-router.use(verifyToken); // Place this at the beginning to apply middleware to all routes in this router
-
-router.get('/', async (req, res) => {
-  try {
-    
-    const userId = req.userId;
-    if (!userId) {
-        return res.status(400).send({ message: 'User ID not provided' });
-      }
-
-    // Try fetching accounts
-    let accounts = await ChartOfAccounts.find({ user_id: userId });
-
-    // If no accounts are found, create default accounts
-    if (!accounts.length) {
-      accounts = await initializeDefaultAccounts(userId) as any;
-    }
-
-    res.status(200).send(accounts);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-router.post('/', async (req, res) => {
-  try {
-    const account = new ChartOfAccounts(req.body);
-    await account.save();
-    res.status(200).send(account);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-router.put('/:account_id', async (req, res) => {
-  try {
-    const updatedAccount = await ChartOfAccounts.findByIdAndUpdate(req.params.account_id, req.body, { new: true });
-    res.status(200).send(updatedAccount);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-router.delete('/:account_id', async (req, res) => {
-  // Implement deletion logic (checking for transactions, etc.) before this.
-  try {
-    await ChartOfAccounts.findByIdAndRemove(req.params.account_id);
-    res.status(200).send({ message: 'Account deleted' });
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-export default router;
-//routes/transactionRoutes.ts
-
-import express from 'express';
-import Transaction from '../models/transaction';
-import verifyToken from '../middleware/authMiddleware';
-import { ChartOfAccounts } from '../models/chartOfAccounts';
-
-const router = express.Router();
-
-router.use(verifyToken);  // Middleware to authenticate user
-
-router.get('/', async (req, res) => {
-  try {
-    const userId = req.userId;
-    const transactions = await Transaction.find({ user_id: userId });
-    res.status(200).send(transactions);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-router.post('/', async (req, res) => {
-
-  try {
-      const { date, description, debit_account_name, credit_account_name, amount, cash_flow_category, affects_cash } = req.body;
-      const { userId } = req;
-      
-      // Fetch the ObjectIds for account and category
-      const debitAccountDocument = await ChartOfAccounts.findOne({ account_name: debit_account_name,user_id:userId });
-      const creditAccountDocument = await ChartOfAccounts.findOne({ account_name: credit_account_name, user_id: userId });
-
-      // Validate if we found the account and category
-      if (!debitAccountDocument || !creditAccountDocument) {
-          return res.status(400).send({ message: 'Account not found' });
-      }
-      const transactionData = {
-          date,
-          description,
-          debit_account_name,
-          credit_account_name,
-          debit_account_type: debitAccountDocument._id,
-          credit_account_type: creditAccountDocument._id,
-          amount,
-          user_id: userId,
-          cash_flow_category,
-          affects_cash
-      };
-      
-      const transaction = new Transaction(transactionData);
-      await transaction.save();
-      res.status(200).send(transaction);
-  } catch (err) {
-      console.log(err);
-      res.status(400).send(err);
-  }
-});
-
-router.put('/:transaction_id', async (req, res) => {
-  try {
-    const updatedTransaction = await Transaction.findByIdAndUpdate(req.params.transaction_id, req.body, { new: true });
-    res.status(200).send(updatedTransaction);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-router.delete('/:transaction_id', async (req, res) => {
-  try {
-    await Transaction.findByIdAndRemove(req.params.transaction_id);
-    res.status(200).send({ message: 'Transaction deleted' });
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-router.get('/income-statement', async (req, res) => {
-  console.log('Processing GET request for /', req.userId);
-  try {
-      const userId = req.userId;
-      console.log('userId', userId)
-
-      // Fetch account entries for Revenue and Expense types
-      const revenueAccounts = await ChartOfAccounts.find({ account_type: 'Revenue', user_id: userId });
-      const expenseAccounts = await ChartOfAccounts.find({ account_type: 'Expense', user_id: userId });
-
-      const revenueAccountIds = revenueAccounts.map(account => account._id);
-      const expenseAccountIds = expenseAccounts.map(account => account._id);
-
-      // Fetching all Revenue and Expense transactions for the user
-      const revenueTransactions = await Transaction.find({
-          user_id: userId,
-          $or: [
-              { credit_account_type: { $in: revenueAccountIds } }
-          ]
-      });
-      const expenseTransactions = await Transaction.find({
-          user_id: userId,
-          $or: [
-              { debit_account_type: { $in: expenseAccountIds } }
-          ]
-      });
-      res.status(200).send([revenueTransactions, expenseTransactions]);
-  } catch (err) {
-      console.log(err);
-      res.status(400).send(err);
-  }
-});
-
-router.get('/cash-flow-statement', async (req, res) => {
-  try {
-    const userId = req.userId;
-    const openingBalance = 0; // You would get this from your balances records.
-    let cashFlowFromOperatingActivities = 0;
-    let cashFlowFromInvestingActivities = 0;
-    let cashFlowFromFinancingActivities = 0;
-    let grossCashInflow = 0;
-    let grossCashOutflow = 0;
-
-    // Get all transactions that affect cash for the user.
-    const cashAffectingTransactions = await Transaction.find({
-      user_id: userId,
-      affects_cash: true,
-    });
-
-    // Iterate through each transaction and update the cash flow and gross inflow/outflow based on category.
-    cashAffectingTransactions.forEach(transaction => {
-      const isDebitToCash = transaction.debit_account_name === 'Cash';
-      const amount = isDebitToCash ? transaction.amount : -transaction.amount;
-      console.log('amount', amount)
-      console.log('transaction.cash_flow_category', transaction.cash_flow_category)
-
-      // Update cash flow based on category
-      switch (transaction.cash_flow_category) {
-        case 'Operating':
-          cashFlowFromOperatingActivities += amount;
-          break;
-        case 'Investing':
-          cashFlowFromInvestingActivities += amount;
-          break;
-        case 'Financing':
-          cashFlowFromFinancingActivities += amount;
-          break;
-        // No default case needed as we've covered all defined enum values.
-      }
-
-      // Update gross inflow and outflow
-      if (isDebitToCash) {
-        grossCashInflow += transaction.amount; // if cash is credited, it's an inflow
-      } else {
-        grossCashOutflow += transaction.amount; // if cash is debited, it's an outflow
-      }
-    });
-
-    const closingBalance = openingBalance + cashFlowFromOperatingActivities + cashFlowFromInvestingActivities + cashFlowFromFinancingActivities;
-
-    res.status(200).send({
-      openingBalance,
-      cashFlowFromOperatingActivities,
-      cashFlowFromInvestingActivities,
-      cashFlowFromFinancingActivities,
-      grossCashInflow,
-      grossCashOutflow,
-      closingBalance,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(400).send(err);
-  }
-});
-
-
-
-export default router;
-//index.ts
-
-import express from 'express';
-import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
-import authRoutes from './routes/authRoutes';
-import dotenv from 'dotenv';
-import chartOfAccountsRoutes from './routes/chartOfAccountsRoutes';
-import transactionRoutes from './routes/transactionRoutes';
-
-const cors = require('cors');
-
-const app = express();
-
-app.use(bodyParser.json());
-dotenv.config();
-
-// Use CORS middleware to allow requests from Angular's development server
-app.use(cors({ origin: "http://localhost:4200" }));
-
-// Handle OPTIONS requests (for preflight checks)
-app.options('*', cors());
-
-// Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/accounting');
-
-// Routes will be added here
-app.use('/api/auth', authRoutes);
-app.use('/api/chart-of-accounts', chartOfAccountsRoutes);
-app.use('/api/transactions', transactionRoutes);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});

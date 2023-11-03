@@ -35,8 +35,9 @@ totalEquity: number = 0;
       ];
   
       this.equity = [
+        { name: 'Total Owner’s Capital', balance: data.totalOwnerCapital },
+        { name: 'Total Retained Earnings', balance: data.totalRetainedEarnings },
         { name: 'Total Other Equity', balance: data.totalOtherEquity },
-        { name: 'Total Retained Earnings', balance: data.totalRetainedEarnings }
       ];
 
       this.totalAssets = this.assets.reduce((acc, asset) => acc + asset.balance, 0);

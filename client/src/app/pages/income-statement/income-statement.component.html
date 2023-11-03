@@ -1,43 +1,60 @@
-<div
-    class="bg-white min-h-screen p-8 px-60">
+<div class="bg-white p-8 px-60">
 
-    <div class="flex justify-between items-center p-4 border-b">
-        <h1 class="text-3xl font-bold">Profit & Loss</h1>
-        <button class="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Export</button>
+    <div class="flex justify-center items-center p-4 border-b">
+        <h1 class="text-4xl font-impact">Profit & Loss</h1>
     </div>
 
-    <div
-        class="flex justify-between items-center p-4 bg-white border-b mt-4">
+    <div class="flex justify-between items-center p-4 bg-white border-b mt-4">
         <div class="flex gap-4">
-            <select class="border p-2 rounded">
-                <option>2023</option>
-            </select>
-            <input type="date" class="border p-2 rounded" value="2023-01-01">
-                <input type="date" class="border p-2 rounded" value="2023-10-29"></div>
-                <button class="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Update Report</button>
+            <div date-rangepicker="date-rangepicker" class="flex items-center">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <input name="start" [(ngModel)]="startDate" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start"></div>
+                    <span class="mx-4 text-gray-500">to</span>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                            </svg>
+                        </div>
+                        <input name="end" [(ngModel)]="endDate" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end"></div>
+                    </div>
+
+                </div>
+                <button (click)="updateReport()" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Update Report</button>
+
             </div>
 
             <!-- Summary Section -->
             <div class="p-4 bg-white mt-4">
-                <div
-                    class="grid grid-cols-7 gap-4 mb-6 px-12">
+                <div class="grid grid-cols-7 gap-4 mb-6 px-8">
                     <div>
                         <div class="font-bold text-sm mb-1">Income</div>
                         <div class="text-3xl">{{totalRevenue | currency}}</div>
                     </div>
-                    <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-minus"></i></div>
+                    <div class="font-bold text-3xl pt-6">
+                        <i class="fa-solid fa-minus"></i>
+                    </div>
                     <div>
                         <div class="font-bold text-sm mb-1">Cost of Goods Sold</div>
                         <div class="text-3xl">$0.00</div>
                     </div>
-                    <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-minus"></i></div>
+                    <div class="font-bold text-3xl pt-6">
+                        <i class="fa-solid fa-minus"></i>
+                    </div>
 
                     <div>
                         <div class="font-bold text-sm mb-1">Operating Expenses</div>
                         <div class="text-3xl">{{totalExpense | currency}}</div>
                     </div>
                     <div class="flex items-center justify-center">
-                        <div class="font-bold text-3xl pt-6"><i class="fa-solid fa-equals"></i></div>
+                        <div class="font-bold text-3xl pt-6">
+                            <i class="fa-solid fa-equals"></i>
+                        </div>
                     </div>
 
                     <div>
@@ -45,8 +62,8 @@
                         <div class="text-3xl text-blue-400">{{netIncome | currency}}</div>
                     </div>
                 </div>
-                <div class="flex border-b 
-                mb-4 justify-center">
+                <div class="flex border-b
+                                        mb-4 justify-center">
                     <button class="py-2 px-4 font-bold border-b-2 border-blue-500 text-2xl">Summary</button>
                 </div>
 
@@ -84,8 +101,8 @@
                         <td colspan="2" class="py-2">As a percentage of Total Income</td>
                         <td class="text-right py-2">{{netIncome/totalRevenue | percent}}</td>
                     </tr>
-                </table>                
-                
+                </table>
+
 
             </div>
         </div>

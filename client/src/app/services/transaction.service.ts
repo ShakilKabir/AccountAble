@@ -1,45 +1,46 @@
 //services/transaction.service.ts
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransactionService {
-
   private apiUrl = 'http://localhost:3000/api/transactions';
 
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getTransactions(): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
-      })
+        'Content-Type': 'application/json',
+        'x-access-token':
+          JSON.parse(localStorage.getItem('currentUser') || '{}').token || '',
+      }),
     };
     return this.http.get(this.apiUrl, httpOptions);
   }
-  
+
   addTransaction(transaction: any): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
-      })
+        'Content-Type': 'application/json',
+        'x-access-token':
+          JSON.parse(localStorage.getItem('currentUser') || '{}').token || '',
+      }),
     };
     return this.http.post(this.apiUrl, transaction, httpOptions);
   }
-  
+
   deleteTransaction(id: string): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
-      })
+        'Content-Type': 'application/json',
+        'x-access-token':
+          JSON.parse(localStorage.getItem('currentUser') || '{}').token || '',
+      }),
     };
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete(url, httpOptions);
@@ -48,31 +49,41 @@ export class TransactionService {
   getIncomeStatement(): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
-      })
+        'Content-Type': 'application/json',
+        'x-access-token':
+          JSON.parse(localStorage.getItem('currentUser') || '{}').token || '',
+      }),
     };
     return this.http.get(`${this.apiUrl}/income-statement`, httpOptions);
   }
-  
-  getCashFlowStatement(): Observable<any> {
+
+  getCashFlowStatement(startDate?: string, endDate?: string): Observable<any> {
+    let params = new HttpParams();
+    if (startDate) {
+      params = params.set('startDate', startDate);
+    }
+    if (endDate) {
+      params = params.set('endDate', endDate);
+    }
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
-      })
+        'x-access-token':
+          JSON.parse(localStorage.getItem('currentUser') || '{}').token || '',
+      }),
+      params: params,
     };
-    return this.http.get(`${this.apiUrl}/cash-flow-statement`, httpOptions)
+    return this.http.get(`${this.apiUrl}/cash-flow-statement`, httpOptions);
   }
 
   getBalanceSheet(): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'x-access-token': JSON.parse(localStorage.getItem('currentUser') || '{}').token || ''
-      })
+        'x-access-token':
+          JSON.parse(localStorage.getItem('currentUser') || '{}').token || '',
+      }),
     };
     return this.http.get(`${this.apiUrl}/balance-sheet`, httpOptions);
   }
-
 }

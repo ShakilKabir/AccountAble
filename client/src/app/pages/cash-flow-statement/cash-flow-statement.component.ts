@@ -16,15 +16,22 @@ export class CashFlowStatementComponent implements OnInit {
     grossCashOutflow: 0,
     closingBalance: 0,
   };
+
+  startDate: string='';
+  endDate: string='';
   
   constructor(private transactionService: TransactionService) {}
 
   ngOnInit() {
-    this.updateReport();
-  }
+    // Set default date range from the start of the current year to today
+    const currentDate = new Date();
+    this.startDate = new Date(new Date().getFullYear(), 0, 1).toLocaleDateString('sv-SE', { timeZone: 'Asia/Dhaka' });
+    this.endDate = currentDate.toISOString().split('T')[0];
 
-  updateReport() {
-    this.transactionService.getCashFlowStatement().subscribe(
+    this.updateReport(this.startDate, this.endDate);
+  }
+  updateReport(startDate?: string, endDate?: string) {
+    this.transactionService.getCashFlowStatement(startDate, endDate).subscribe(
       data => {
         this.cashFlowData = data;
         console.log('Cash flow statement retrieved successfully', data)
