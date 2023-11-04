@@ -89,7 +89,7 @@ export class TransactionService {
   }
 
   
-  getBalanceSheetByDate(date: Date): Observable<any> {
+  getBalanceSheetByDate(date: string): Observable<any> {
     const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
     const httpOptions = {
       headers: new HttpHeaders({

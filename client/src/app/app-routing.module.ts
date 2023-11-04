@@ -13,6 +13,7 @@ import { ChartOfAccountsComponent } from './pages/chart-of-accounts/chart-of-acc
 import { IncomeStatementComponent } from './pages/income-statement/income-statement.component';
 import { CashFlowStatementComponent } from './pages/cash-flow-statement/cash-flow-statement.component';
 import { BalanceSheetComponent } from './pages/balance-sheet/balance-sheet.component';
+import { InvoiceComponent } from './pages/invoice/invoice.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -46,7 +47,12 @@ const routes: Routes = [
       {
         path: 'balance-sheet',
         component: BalanceSheetComponent
-      }
+      },
+      {
+        path: 'invoice',
+        component: InvoiceComponent
+      },
+
     ]
   },
 ];

@@ -16,12 +16,13 @@ export class BalanceSheetComponent implements OnInit {
   totalAssets: number = 0;
 totalLiabilities: number = 0;
 totalEquity: number = 0;
-reportDate: Date = new Date();
+reportDate: string = '';
 
   constructor(private transactionService: TransactionService) { }
 
   ngOnInit(): void {
     this.loadBalanceSheet();
+    this.reportDate = new Date().toISOString().split('T')[0];
   }
 
   loadBalanceSheet(): void {

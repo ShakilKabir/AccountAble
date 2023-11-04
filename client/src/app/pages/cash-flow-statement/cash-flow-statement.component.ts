@@ -25,7 +25,6 @@ export class CashFlowStatementComponent implements OnInit {
   constructor(private transactionService: TransactionService) {}
 
   ngOnInit() {
-    // Set default date range from the start of the current year to today
     const currentDate = new Date();
     this.startDate = new Date(new Date().getFullYear(), 0, 1).toLocaleDateString('sv-SE', { timeZone: 'Asia/Dhaka' });
     this.endDate = currentDate.toISOString().split('T')[0];

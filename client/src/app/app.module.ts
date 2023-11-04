@@ -22,6 +22,7 @@ import { IncomeStatementComponent } from './pages/income-statement/income-statem
 import { CashFlowStatementComponent } from './pages/cash-flow-statement/cash-flow-statement.component';
 import { BalanceSheetComponent } from './pages/balance-sheet/balance-sheet.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { InvoiceComponent } from './pages/invoice/invoice.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
     IncomeStatementComponent,
     CashFlowStatementComponent,
     BalanceSheetComponent,
+    InvoiceComponent,
   ],
   imports: [
     BrowserModule,
