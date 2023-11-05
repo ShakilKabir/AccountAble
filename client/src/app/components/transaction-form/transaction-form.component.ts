@@ -4,6 +4,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { TransactionService } from 'src/app/services/transaction.service';
 import { ChartOfAccountsService } from '../../services/chart-of-accounts.service';
+import { Entry } from 'src/app/models/entry';
 
 @Component({
   selector: 'app-transaction-form',
@@ -65,51 +66,54 @@ export class TransactionFormComponent implements OnInit {
   }
   
   onSave(): void {
-    Object.keys(this.transactionForm.controls).forEach(key => {
-      const control = this.transactionForm.get(key);
-  
-      if (control && control.errors) {
-          Object.keys(control.errors).forEach(keyError => {
-              console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', control.errors![keyError]);
-          });
-      }
-    });
-    console.log(this.transactionForm.errors);
-    console.log(this.transactionForm);
     if (this.transactionForm.valid) {
+      const transactionPayload: any = {
+        date: this.transactionForm.value.date,
+        description: this.transactionForm.value.description,
+        cash_flow_category: this.transactionForm.value.cash_flow_category || 'Operating',
+        affects_cash: false,
+        debit_entries: [],
+        credit_entries: []
+      };
+  
+      // Assuming the form control 'amount' contains the transaction amount
+      const amount = this.transactionForm.value.amount;
+  
       if (this.type === 'deposit') {
-        this.transactionForm.value.debit_account_name = this.transactionForm.value.account;
-        this.transactionForm.value.credit_account_name = this.transactionForm.value.category;
-        if(this.transactionForm.value.account === 'Cash'){
-          this.transactionForm.value.cash_flow_category = 'Operating';
-          this.transactionForm.value.affects_cash = true;
-        } else {
-          this.transactionForm.value.cash_flow_category = 'None';
-          this.transactionForm.value.affects_cash = false;
-        }
+        transactionPayload.debit_entries.push({
+          account_name: this.transactionForm.value.account,
+          amount: amount
+        });
+        transactionPayload.credit_entries.push({
+          account_name: this.transactionForm.value.category,
+          amount: amount
+        });
       } else if (this.type === 'withdrawal') {
-        this.transactionForm.value.debit_account_name = this.transactionForm.value.category;
-        this.transactionForm.value.credit_account_name = this.transactionForm.value.account;
-        if(this.transactionForm.value.account === 'Cash'){
-          this.transactionForm.value.cash_flow_category = 'Operating';
-          this.transactionForm.value.affects_cash = true;
-        } else {
-          this.transactionForm.value.cash_flow_category = 'None';
-          this.transactionForm.value.affects_cash = false;
-        }
+        transactionPayload.debit_entries.push({
+          account_name: this.transactionForm.value.category,
+          amount: amount
+        });
+        transactionPayload.credit_entries.push({
+          account_name: this.transactionForm.value.account,
+          amount: amount
+        });
       } else if (this.type === 'journal') {
-        this.transactionForm.value.debit_account_name = this.transactionForm.value.account;
-        this.transactionForm.value.credit_account_name = this.transactionForm.value.category;
-        if(this.transactionForm.value.account === 'Cash' || this.transactionForm.value.category === 'Cash'){
-          this.transactionForm.value.affects_cash = true;
-        } else {
-          this.transactionForm.value.cash_flow_category = 'None';
-          this.transactionForm.value.affects_cash = false;
-        }
+        transactionPayload.debit_entries.push({
+          account_name: this.transactionForm.value.account,
+          amount: amount
+        });
+        transactionPayload.credit_entries.push({
+          account_name: this.transactionForm.value.category,
+          amount: amount
+        });
       }
-      console.log(this.transactionForm.value,this.type);
-      
-      this.transactionService.addTransaction(this.transactionForm.value).subscribe(
+  
+      // Set affects_cash based on account names
+      transactionPayload.affects_cash = transactionPayload.debit_entries.some((entry:Entry) => entry.account_name === 'Cash') || transactionPayload.credit_entries.some((entry:Entry) => entry.account_name === 'Cash');
+  
+      console.log(transactionPayload);
+  
+      this.transactionService.addTransaction(transactionPayload).subscribe(
         () => {
           console.log('Transaction added successfully');
           this.transactionAdded.emit(); 
@@ -123,6 +127,7 @@ export class TransactionFormComponent implements OnInit {
       console.error('Form is not valid');
     }
   }
+  
 
   onClose(): void {
     this.close.emit();

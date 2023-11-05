@@ -16,31 +16,41 @@ export class IncomeStatementComponent implements OnInit {
   totalRevenue: number = 0;
   totalExpense: number = 0;
   netIncome: number = 0;
-  startDate: string='';
-  endDate: string='';
+  startDate: string = '';
+  endDate: string = '';
 
   constructor(private transactionService: TransactionService) {}
 
   ngOnInit() {
     const currentDate = new Date();
-  this.endDate = currentDate.toISOString().split('T')[0];
-  this.startDate = new Date(new Date().getFullYear(), 0, 1).toLocaleDateString('sv-SE', { timeZone: 'Asia/Dhaka' });
+    this.endDate = currentDate.toISOString().split('T')[0];
+    this.startDate = new Date(
+      new Date().getFullYear(),
+      0,
+      1
+    ).toLocaleDateString('sv-SE', { timeZone: 'Asia/Dhaka' });
     this.loadTransactions();
   }
 
   updateReport() {
-    this.loadTransactions(); // This will reload transactions based on new filter dates
+    this.loadTransactions();
   }
 
   loadTransactions() {
     this.transactionService.getIncomeStatement().subscribe({
       next: (data: any[]) => {
-        // Filter transactions based on the date range
-        console.log(data)
+        console.log(data);
+        // Assuming the backend sends the data in the same structure you printed
+        const revenues = data[0]; // Revenue Transactions
+        const expenses = data[1]; // Expense Transactions
+        
+        // Filter and process transactions based on the date
         this.transactions = [
-          this.filterTransactionsByDate(data[0]),
-          this.filterTransactionsByDate(data[1])
+          this.processTransactions(revenues, this.startDate, this.endDate, 'revenue'),
+          this.processTransactions(expenses, this.startDate, this.endDate, 'expense')
         ];
+
+        // Calculate totals
         this.calculateTotals();
       },
       error: (err) => {
@@ -48,35 +58,37 @@ export class IncomeStatementComponent implements OnInit {
       }
     });
   }
-  
-  filterTransactionsByDate(transactions: any[]) {
+
+  processTransactions(transactions: any[], startDate: string, endDate: string, type: 'revenue' | 'expense') {
     return transactions.filter(transaction => {
       const transactionDate = new Date(transaction.date);
-      const start = new Date(this.startDate);
-      const end = new Date(this.endDate);
+      const start = new Date(startDate);
+      const end = new Date(endDate);
       return transactionDate >= start && transactionDate <= end;
-    });
+    }).flatMap(transaction => 
+      // Choose only credit entries for revenue, and debit for expenses
+      type === 'revenue' ? [transaction.credit_entries] : transaction.debit_entries
+    );
   }
+  
   
 
   calculateTotals() {
-    this.totalRevenue = this.transactions[0].reduce((acc: number, transaction: Transaction) => acc + (transaction.amount || 0), 0);
-    this.totalExpense = this.transactions[1].reduce((acc: number, transaction: Transaction) => acc + (transaction.amount || 0), 0);
+    this.totalRevenue = this.transactions[0].reduce((acc: number, entry: any) => acc + entry.amount, 0);
+    this.totalExpense = this.transactions[1].reduce((acc: number, entry: any) => acc + entry.amount, 0);
     this.netIncome = this.totalRevenue - this.totalExpense;
   }
 
   exportAsPDF(divId: string) {
     const data = document.getElementById(divId);
-    html2canvas(data!).then(canvas => {
+    html2canvas(data!).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'pt', 'a4');
-      const imgProps= pdf.getImageProperties(imgData);
+      const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save('income-statement.pdf');
     });
   }
-  
-  
 }

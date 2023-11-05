@@ -1,15 +1,22 @@
 //models/transaction.ts
 
-import mongoose from 'mongoose';
+import mongoose, { CallbackError } from 'mongoose';
 import { ChartOfAccounts } from './chartOfAccounts';
+
+const entrySchema = new mongoose.Schema({
+  account_type: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ChartOfAccounts',
+    required: true
+  },
+  account_name: { type: String, required: true },
+  amount: { type: Number, required: true }
+});
 
 const transactionSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
-  debit_account_type: { type: mongoose.Schema.Types.ObjectId, ref: 'ChartOfAccounts', required: true },
-  debit_account_name: { type: String, required: true },
-  amount: { type: Number, required: true },
-  credit_account_type: { type: mongoose.Schema.Types.ObjectId, ref: 'ChartOfAccounts', required: true },
-  credit_account_name: { type: String, required: true },
+  debit_entries: [entrySchema],
+  credit_entries: [entrySchema],
   description: { type: String },
   affects_cash: { type: Boolean, default: false },
   cash_flow_category: {
@@ -22,29 +29,50 @@ const transactionSchema = new mongoose.Schema({
 
 
 transactionSchema.pre('save', async function (next) {
-  const debitAccount = await ChartOfAccounts.findById(this.debit_account_type);
-  const creditAccount = await ChartOfAccounts.findById(this.credit_account_type);
+  try {
+    // Aggregate debit and credit amounts separately
+    const totalDebits = this.debit_entries.reduce((sum, entry) => sum + entry.amount, 0);
+    const totalCredits = this.credit_entries.reduce((sum, entry) => sum + entry.amount, 0);
 
-  if (!debitAccount || !creditAccount) {
-    throw new Error('Account not found');
+    // Check if total debits equals total credits
+    if (totalDebits !== totalCredits) {
+      throw new Error('The sum of debits does not equal the sum of credits.');
+    }
+
+    // Process each debit entry
+    for (let entry of this.debit_entries) {
+      const account = await ChartOfAccounts.findById(entry.account_type);
+      if (!account) {
+        throw new Error(`Debit account not found for ID: ${entry.account_type}`);
+      }
+      if (account.account_type === 'Asset' || account.account_type === 'Expense') {
+        account.balance += entry.amount; 
+      } else {
+        account.balance -= entry.amount;
+      }
+      await account.save();
+    }
+
+    // Process each credit entry
+    for (let entry of this.credit_entries) {
+      const account = await ChartOfAccounts.findById(entry.account_type);
+      if (!account) {
+        throw new Error(`Credit account not found for ID: ${entry.account_type}`);
+      }
+      if (account.account_type === 'Liability' || account.account_type === 'Equity' || account.account_type === 'Revenue') {
+        account.balance += entry.amount; 
+      } else {
+        account.balance -= entry.amount; 
+      }
+      await account.save();
+    }
+
+    next();
+  } catch (error) {
+    next(error as CallbackError);
   }
-
-  if (debitAccount.account_type === 'Asset' || debitAccount.account_type === 'Expense') {
-    debitAccount.balance += this.amount; 
-  } else {
-    debitAccount.balance -= this.amount;
-  }
-
-  if (creditAccount.account_type === 'Liability' || creditAccount.account_type === 'Equity' || creditAccount.account_type === 'Revenue') {
-    creditAccount.balance += this.amount; 
-  } else {
-    creditAccount.balance -= this.amount; 
-  }
-
-  await debitAccount.save();
-  await creditAccount.save();
-
-  next();
 });
+
+
 
 export default mongoose.model('Transaction', transactionSchema);

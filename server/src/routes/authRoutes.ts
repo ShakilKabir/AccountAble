@@ -4,7 +4,6 @@ import express from 'express';
 import User from '../models/user';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { log } from 'console';
 require('dotenv').config();
 
 const secretKey = process.env.JWT_SECRET;
