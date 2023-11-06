@@ -10,7 +10,6 @@ import html2canvas from 'html2canvas';
   selector: 'app-income-statement',
   templateUrl: './income-statement.component.html',
 })
-
 export class IncomeStatementComponent implements OnInit {
   transactions: any[] = [];
   totalRevenue: number = 0;
@@ -18,21 +17,25 @@ export class IncomeStatementComponent implements OnInit {
   netIncome: number = 0;
   startDate: string = '';
   endDate: string = '';
+  tempStartDate: string = '';
+  tempEndDate: string = '';
 
   constructor(private transactionService: TransactionService) {}
 
   ngOnInit() {
     const currentDate = new Date();
-    this.endDate = currentDate.toISOString().split('T')[0];
-    this.startDate = new Date(
-      new Date().getFullYear(),
+    this.endDate = this.tempEndDate = currentDate.toISOString().split('T')[0];
+    this.startDate = this.tempStartDate = new Date(
+      currentDate.getFullYear(),
       0,
       1
-    ).toLocaleDateString('sv-SE', { timeZone: 'Asia/Dhaka' });
+    ).toLocaleDateString('sv-SE');
     this.loadTransactions();
   }
 
   updateReport() {
+    this.startDate = this.tempStartDate;
+    this.endDate = this.tempEndDate;
     this.loadTransactions();
   }
 
@@ -43,11 +46,21 @@ export class IncomeStatementComponent implements OnInit {
         // Assuming the backend sends the data in the same structure you printed
         const revenues = data[0]; // Revenue Transactions
         const expenses = data[1]; // Expense Transactions
-        
+
         // Filter and process transactions based on the date
         this.transactions = [
-          this.processTransactions(revenues, this.startDate, this.endDate, 'revenue'),
-          this.processTransactions(expenses, this.startDate, this.endDate, 'expense')
+          this.processTransactions(
+            revenues,
+            this.startDate,
+            this.endDate,
+            'revenue'
+          ),
+          this.processTransactions(
+            expenses,
+            this.startDate,
+            this.endDate,
+            'expense'
+          ),
         ];
 
         // Calculate totals
@@ -55,27 +68,40 @@ export class IncomeStatementComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching transactions:', err);
-      }
+      },
     });
   }
 
-  processTransactions(transactions: any[], startDate: string, endDate: string, type: 'revenue' | 'expense') {
-    return transactions.filter(transaction => {
-      const transactionDate = new Date(transaction.date);
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      return transactionDate >= start && transactionDate <= end;
-    }).flatMap(transaction => 
-      // Choose only credit entries for revenue, and debit for expenses
-      type === 'revenue' ? [transaction.credit_entries] : transaction.debit_entries
-    );
+  processTransactions(
+    transactions: any[],
+    startDate: string,
+    endDate: string,
+    type: 'revenue' | 'expense'
+  ) {
+    return transactions
+      .filter((transaction) => {
+        const transactionDate = new Date(transaction.date);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return transactionDate >= start && transactionDate <= end;
+      })
+      .flatMap((transaction) =>
+        // Choose only credit entries for revenue, and debit for expenses
+        type === 'revenue'
+          ? [transaction.credit_entries]
+          : transaction.debit_entries
+      );
   }
-  
-  
 
   calculateTotals() {
-    this.totalRevenue = this.transactions[0].reduce((acc: number, entry: any) => acc + entry.amount, 0);
-    this.totalExpense = this.transactions[1].reduce((acc: number, entry: any) => acc + entry.amount, 0);
+    this.totalRevenue = this.transactions[0].reduce(
+      (acc: number, entry: any) => acc + entry.amount,
+      0
+    );
+    this.totalExpense = this.transactions[1].reduce(
+      (acc: number, entry: any) => acc + entry.amount,
+      0
+    );
     this.netIncome = this.totalRevenue - this.totalExpense;
   }
 
