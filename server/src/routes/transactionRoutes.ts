@@ -2,7 +2,7 @@
 
 import express from "express";
 import { Types } from "mongoose";
-import Transaction from "../models/transaction"; // Assuming default export of your model
+import Transaction from "../models/transaction";
 import verifyToken from "../middleware/authMiddleware";
 import { ChartOfAccounts } from "../models/chartOfAccounts";
 import { Entry, TransactionPostRequestBody } from "../types/index";
@@ -14,8 +14,7 @@ router.use(verifyToken);
 // GET all transactions for the logged-in user
 router.get("/", async (req, res) => {
   try {
-    // req.userId should be attached in the authMiddleware and its type is string
-    const userId = new Types.ObjectId(req.userId as string); // Convert to ObjectId
+    const userId = new Types.ObjectId(req.userId as string); 
     const transactions = await Transaction.find({ user_id: userId });
     res.status(200).json(transactions);
   } catch (err) {
@@ -38,7 +37,7 @@ router.post(
         cash_flow_category,
         affects_cash,
       } = req.body;
-      const userId = new Types.ObjectId(req.userId as string); // Convert to ObjectId
+      const userId = new Types.ObjectId(req.userId as string);
 
       const debitAccountDocuments = await Promise.all(
         debit_entries.map((debitEntry) =>
@@ -87,9 +86,9 @@ router.post(
 
       const transaction = new Transaction(transactionData);
       await transaction.save();
-      res.status(201).json(transaction); // Use 201 for created resources
+      res.status(201).json(transaction); 
     } catch (err) {
-      console.error(err); // Log the error
+      console.error(err); 
       res
         .status(500)
         .json({ message: "Error creating transaction", error: err });
@@ -171,7 +170,7 @@ router.delete("/:transaction_id", async (req, res) => {
 
 router.get("/income-statement", async (req, res) => {
   try {
-    const userId = new Types.ObjectId(req.userId as string); // Ensure the userId is an ObjectId
+    const userId = new Types.ObjectId(req.userId as string);
 
     // Fetch all revenue and expense accounts for the user
     const revenueAccounts = await ChartOfAccounts.find({
@@ -223,7 +222,6 @@ router.get("/income-statement", async (req, res) => {
       ? expenseTransactions[0].transactions
       : [];
 
-    // Note: Depending on the frontend expectation you may need to adjust the structure of the response
     res.status(200).send([revenueResults, expenseResults]);
   } catch (err) {
     console.log(err);
@@ -271,7 +269,7 @@ router.get("/cash-flow-statement", async (req, res) => {
       }
 
       // Adjust the cash flow categories accordingly
-      const amount = totalDebitAmount - totalCreditAmount; // If cash is debited, it is an inflow. If credited, it is an outflow.
+      const amount = totalDebitAmount - totalCreditAmount;
 
       switch (transaction.cash_flow_category) {
         case "Operating":
@@ -407,7 +405,7 @@ router.get("/balance-sheet", async (req, res) => {
 router.get("/balance-sheet-by-date", async (req, res) => {
   try {
     const userId = req.userId;
-    const { date } = req.query; // The date query parameter is expected to be provided
+    const { date } = req.query;
 
     if (!date || typeof date !== "string") {
       return res

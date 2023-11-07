@@ -43,7 +43,6 @@ export class IncomeStatementComponent implements OnInit {
     this.transactionService.getIncomeStatement().subscribe({
       next: (data: any[]) => {
         console.log(data);
-        // Assuming the backend sends the data in the same structure you printed
         const revenues = data[0]; // Revenue Transactions
         const expenses = data[1]; // Expense Transactions
 
@@ -86,7 +85,6 @@ export class IncomeStatementComponent implements OnInit {
         return transactionDate >= start && transactionDate <= end;
       })
       .flatMap((transaction) =>
-        // Choose only credit entries for revenue, and debit for expenses
         type === 'revenue'
           ? [transaction.credit_entries]
           : transaction.debit_entries

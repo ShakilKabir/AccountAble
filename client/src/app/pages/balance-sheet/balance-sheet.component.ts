@@ -54,34 +54,27 @@ reportDate: string = '';
   loadBalanceSheetByDate(): void {
     this.transactionService.getBalanceSheetByDate(this.reportDate).subscribe(
       data => {
-        // Update assets array
         this.assets = [
           { name: 'Total Cash and Bank', balance: data.totalCash },
           { name: 'Total Other Current Assets', balance: data.totalOtherCurrentAsset },
           { name: 'Total Long-term Assets', balance: data.totalLongTermAssets }
         ];
   
-        // Update liabilities array
         this.liabilities = [
           { name: 'Total Current Liabilities', balance: data.totalCurrentLiabilities },
           { name: 'Total Long-term Liabilities', balance: data.totalLongTermLiabilities }
         ];
   
-        // Update equity array
         this.equity = [
           { name: 'Total Owner’s Capital', balance: data.totalOwnerCapital },
           { name: 'Total Retained Earnings', balance: data.totalRetainedEarnings },
           { name: 'Total Other Equity', balance: data.totalOtherEquity },
         ];
   
-        // Update total values
         this.totalAssets = data.totalAssets;
         this.totalLiabilities = data.totalLiabilities;
         this.totalEquity = data.totalOwnerCapital + data.totalRetainedEarnings + data.totalOtherEquity;
   
-        // You might want to handle netIncome if you need to display it or use it in calculations
-        // For example:
-        // this.netIncome = data.netIncome;
       },
       error => {
         console.error('Error fetching balance sheet data by date', error);

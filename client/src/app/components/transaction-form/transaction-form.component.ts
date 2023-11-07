@@ -76,7 +76,6 @@ export class TransactionFormComponent implements OnInit {
         credit_entries: []
       };
   
-      // Assuming the form control 'amount' contains the transaction amount
       const amount = this.transactionForm.value.amount;
   
       if (this.type === 'deposit') {
@@ -108,7 +107,6 @@ export class TransactionFormComponent implements OnInit {
         });
       }
   
-      // Set affects_cash based on account names
       transactionPayload.affects_cash = transactionPayload.debit_entries.some((entry:Entry) => entry.account_name === 'Cash') || transactionPayload.credit_entries.some((entry:Entry) => entry.account_name === 'Cash');
   
       console.log(transactionPayload);
