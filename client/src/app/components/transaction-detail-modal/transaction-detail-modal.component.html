@@ -1,0 +1,54 @@
+<div *ngIf="show" class="fixed top-0 left-0 w-full h-full flex justify-center items-center">
+    <div class="bg-white rounded-lg p-8 w-11/12 max-w-3xl">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">Transaction Details</h2>
+        <span class="cursor-pointer text-4xl" (click)="closeModal()">&times;</span>
+      </div>
+      
+      <!-- Modal Content -->
+      <div *ngIf="transaction">
+        <p class="mb-4"><strong>Date:</strong> {{ transaction.date | date : 'mediumDate' }}</p>
+        <p class="mb-4"><strong>Description:</strong> {{ transaction.description }}</p>
+        
+        <!-- Debit Entries Table -->
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2">Debit Entries</h3>
+          <table class="w-full mb-4 border-collapse">
+            <thead>
+              <tr>
+                <th class="border-b-2 p-2 text-left">Account Name</th>
+                <th class="border-b-2 p-2 text-left">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let debit of transaction.debit_entries">
+                <td class="p-2 border-b">{{ debit.account_name }}</td>
+                <td class="p-2 border-b">{{ debit.amount | currency }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Credit Entries Table -->
+        <div>
+          <h3 class="text-xl font-semibold mb-2">Credit Entries</h3>
+          <table class="w-full border-collapse">
+            <thead>
+              <tr>
+                <th class="border-b-2 p-2 text-left">Account Name</th>
+                <th class="border-b-2 p-2 text-left">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let credit of transaction.credit_entries">
+                <td class="p-2 border-b">{{ credit.account_name }}</td>
+                <td class="p-2 border-b">{{ credit.amount | currency }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  

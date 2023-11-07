@@ -24,6 +24,8 @@ import { BalanceSheetComponent } from './pages/balance-sheet/balance-sheet.compo
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { InvoiceComponent } from './pages/invoice/invoice.component';
 import { JournalEntryComponent } from './pages/journal-entry/journal-entry.component';
+import { TransactionDetailModalComponent } from './components/transaction-detail-modal/transaction-detail-modal.component';
+import { PaymentsComponent } from './pages/payments/payments.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { JournalEntryComponent } from './pages/journal-entry/journal-entry.compo
     BalanceSheetComponent,
     InvoiceComponent,
     JournalEntryComponent,
+    TransactionDetailModalComponent,
+    PaymentsComponent,
   ],
   imports: [
     BrowserModule,
