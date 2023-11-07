@@ -25,5 +25,5 @@ export class TransactionPostRequestBody {
   credit_entries: Omit<Entry, 'account_type'>[] = [];
   affects_cash: boolean = false;
   cash_flow_category: Transaction['cash_flow_category'] = 'None';
-  user_id: string = ''; // UserID as string because it will come from request, should be converted to ObjectId later
+  user_id: string = '';
 }

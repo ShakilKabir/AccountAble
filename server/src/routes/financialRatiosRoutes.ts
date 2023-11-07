@@ -39,7 +39,6 @@ router.get('/', async (req, res) => {
     const returnOnAssets = netIncome / totalAssets;
     const returnOnEquity = netIncome / totalEquity;
 
-    // Send calculated financial metrics in the response
     res.status(200).send({
       cashAtHand,
       receivables,

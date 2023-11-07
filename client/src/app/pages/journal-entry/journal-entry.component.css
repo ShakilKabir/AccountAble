@@ -1,0 +1,13 @@
+/* styles.css */
+.input-inactive {
+    background-color: #f3f3f3; 
+    color: #ccc; 
+    border: 1px solid #ddd; 
+  }
+  
+  .input-active {
+    background-color: #fff; 
+    color: #333; 
+    border: 1px solid #ccc; 
+  }
+  

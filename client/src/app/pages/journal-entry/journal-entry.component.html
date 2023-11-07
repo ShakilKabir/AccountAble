@@ -1,0 +1,91 @@
+<!-- pages/journal-entry.component.html -->
+
+<div class="container mx-auto p-8">
+    <div class="flex justify-center items-center p-4 mb-8 border-b">
+        <h1 class="font-impact text-4xl">Journal Entry</h1>
+    </div>
+
+    <!-- Date, Description, and Transaction Activities -->
+    <div class="flex flex-wrap -mx-2 mb-6">
+        <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
+            <label for="date-input" class="block text-sm font-medium mb-1">Date:</label>
+            <input id="date-input" type="date" [(ngModel)]="journalEntry.date" class="border rounded p-3 w-full"></div>
+            <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
+                <label for="description-input" class="block text-sm font-medium mb-1">Description:</label>
+                <input id="description-input" type="text" [(ngModel)]="journalEntry.description" placeholder="Description" class="border rounded p-3 w-full"></div>
+                <div class="w-full md:w-1/3 px-2">
+                    <label for="transaction-type-dropdown" class="block text-sm font-medium mb-1">Transaction Type (Cash Flow):</label>
+                    <div class="relative">
+                        <select id="transaction-type-dropdown" [(ngModel)]="journalEntry.cash_flow_category" class="border rounded p-3 w-full appearance-none bg-white text-gray-700 dark:bg-gray-700 dark:text-white">
+                            <option value="Operating">Operating</option>
+                            <option value="Investing">Investing</option>
+                            <option value="Financing">Financing</option>
+                            <option value="None">None</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M5.516 7.548c.436-.446 1.043-.481 1.576 0l3.908 3.747 3.908-3.747c.533-.481 1.14-.446 1.576 0 .436.445.408 1.197 0 1.615l-4.576 4.356c-.269.257-.67.257-.939 0l-4.576-4.356c-.408-.418-.436-1.17 0-1.615z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Table for Journal Entry -->
+            <div class="overflow-x-auto mt-6">
+                <table class="w-full border-collapse table-auto">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border px-4 py-2">Account</th>
+                            <th class="border px-4 py-2">Debit</th>
+                            <th class="border px-4 py-2">Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let line of journalEntry.lines" class="hover:bg-gray-50">
+                            <td class="border px-4 py-2">
+                                <select [(ngModel)]="line.account" class="w-full p-2 border rounded bg-white">
+                                    <option *ngFor="let account of accounts">{{account.account_name}}</option>
+                                </select>
+                            </td>
+                            <td class="border px-4 py-2">
+                                <input type="number" [(ngModel)]="line.debit" [ngClass]="{'input-inactive': line.credit !== 0, 'input-active': line.credit === 0}" (ngModelChange)="onValueChange(line)" class="w-full p-2 border rounded bg-white"></td>
+                                <td class="border px-4 py-2">
+                                    <input type="number" [(ngModel)]="line.credit" [ngClass]="{'input-inactive': line.debit !== 0, 'input-active': line.debit === 0}" (ngModelChange)="onValueChange(line)" class="w-full p-2 border rounded bg-white"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button (click)="addLine()" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Add Line
+                    </button>
+
+                </div>
+                <div class="inline-block float-right mr-20 ml-auto bg-gray-200 p-4 rounded-md">
+                    <div class="flex items-center justify-center space-x-4">
+                        <div class="text-center">
+                            <div class="font-medium text-lg text-gray-600">Total debits</div>
+                            <div class="text-lg font-bold text-orange-600">${{ totalDebits.toFixed(2) }}</div>
+                        </div>
+                        <div
+                            class="text-center font-bold">
+                            <div class="{{ totalDebits === totalCredits ? 'text-green-700' : 'text-red-500' }} text-2xl">
+                                {{ totalDebits === totalCredits ? '=' : '≠' }}
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-medium text-gray-600 text-lg">Total credits</div>
+                            <div class="text-lg font-bold text-orange-600">${{ totalCredits.toFixed(2) }}</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <div class="font-medium text-gray-600 text-lg">Difference:</div>
+                        <div class="text-lg font-bold text-red-600">${{ (totalDebits - totalCredits).toFixed(2) }}</div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button [disabled]="totalDebits !== totalCredits" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" [class.opacity-50]="totalDebits !== totalCredits" [class.bg-gray-500]="totalDebits !== totalCredits" [class.cursor-not-allowed]="totalDebits !== totalCredits">
+                        Save Entry
+                    </button>
+                </div>
