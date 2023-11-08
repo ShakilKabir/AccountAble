@@ -30,12 +30,11 @@
           <td class="py-2 px-4 border-b">
             {{ transaction.date | date : "mediumDate" }}
           </td>
-          <td class="py-2 px-4 border-b">{{ transaction.description }}</td>
-
-          <td class="py-2 px-4 border-b">{{ transaction.amount }}</td>
+          <td class="py-2 px-4 border-b max-w-xl font-bold">{{ transaction.description }}</td>
+          <td class="py-2 px-4 border-b">{{ calculateTotalAmount(transaction) | currency }}</td>
           <td class="py-2 px-4 border-b">
-            <button (click)="deleteTransaction(transaction._id)" type="button" class="focus:outline-none text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
             <button (click)="openDetailModal(transaction)" type="button" class="focus:outline-none text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">Show More</button>
+            <button (click)="deleteTransaction(transaction._id)" type="button" class="focus:outline-none text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
           </td>
         </tr>
       </tbody>

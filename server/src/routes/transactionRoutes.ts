@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 // POST a new transaction
 router.post(
   "/",
-  async (req: express.Request<{}, {}, TransactionPostRequestBody>, res) => {
+  async (req, res) => {
     try {
       const {
         date,
@@ -36,11 +36,13 @@ router.post(
         credit_entries,
         cash_flow_category,
         affects_cash,
+        isPaidOrReceived,
+        recurrence,
       } = req.body;
       const userId = new Types.ObjectId(req.userId as string);
 
       const debitAccountDocuments = await Promise.all(
-        debit_entries.map((debitEntry) =>
+        debit_entries.map((debitEntry:any) =>
           ChartOfAccounts.findOne({
             account_name: debitEntry.account_name,
             user_id: userId,
@@ -48,7 +50,7 @@ router.post(
         )
       );
       const creditAccountDocuments = await Promise.all(
-        credit_entries.map((creditEntry) =>
+        credit_entries.map((creditEntry:any) =>
           ChartOfAccounts.findOne({
             account_name: creditEntry.account_name,
             user_id: userId,
@@ -65,11 +67,11 @@ router.post(
           .json({ message: "One or more accounts not found" });
       }
 
-      const newDebitEntries = debit_entries.map((entry, index) => ({
+      const newDebitEntries = debit_entries.map((entry:any, index:number) => ({
         ...entry,
         account_type: debitAccountDocuments[index]?._id as Types.ObjectId,
       }));
-      const newCreditEntries = credit_entries.map((entry, index) => ({
+      const newCreditEntries = credit_entries.map((entry:any, index:number) => ({
         ...entry,
         account_type: creditAccountDocuments[index]?._id as Types.ObjectId,
       }));
@@ -82,6 +84,8 @@ router.post(
         user_id: userId,
         cash_flow_category,
         affects_cash,
+        isPaidOrReceived,
+        recurrence,
       };
 
       const transaction = new Transaction(transactionData);
@@ -104,6 +108,31 @@ router.post(
 //     res.status(400).send(err);
 //   }
 // });
+
+router.patch('/:id/status', async (req, res) => {
+  const transactionId = req.params.id;
+  const { isPaidOrReceived } = req.body;
+
+  if (typeof isPaidOrReceived !== 'boolean') {
+    return res.status(400).json({ message: "Invalid status provided. Must be a boolean value." });
+  }
+
+  try {
+    const updatedTransaction = await Transaction.findByIdAndUpdate(
+      transactionId,
+      { $set: { isPaidOrReceived: isPaidOrReceived } },
+      { new: true }
+    );
+
+    if (!updatedTransaction) {
+      return res.status(404).json({ message: "Transaction not found." });
+    }
+
+    res.json(updatedTransaction);
+  } catch (error) {
+    res.status(500).json({ message: "Server error occurred." });
+  }
+});
 
 router.delete("/:transaction_id", async (req, res) => {
   try {

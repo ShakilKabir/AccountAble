@@ -15,6 +15,7 @@ import { CashFlowStatementComponent } from './pages/cash-flow-statement/cash-flo
 import { BalanceSheetComponent } from './pages/balance-sheet/balance-sheet.component';
 import { InvoiceComponent } from './pages/invoice/invoice.component';
 import { JournalEntryComponent } from './pages/journal-entry/journal-entry.component';
+import { PaymentsComponent } from './pages/payments/payments.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -56,6 +57,10 @@ const routes: Routes = [
       {
         path: 'journal-entry',
         component: JournalEntryComponent
+      },
+      {
+        path: 'payments',
+        component: PaymentsComponent
       },
     ]
   },
