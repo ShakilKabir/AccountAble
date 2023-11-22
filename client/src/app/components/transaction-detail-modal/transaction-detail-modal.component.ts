@@ -10,6 +10,6 @@ export class TransactionDetailModalComponent {
   @Output() close = new EventEmitter<void>();
 
   closeModal() {
-    this.close.emit(); // Correct usage
+    this.close.emit();
   }
 }

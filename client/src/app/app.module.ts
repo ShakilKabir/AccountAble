@@ -55,9 +55,9 @@ import { PaymentsComponent } from './pages/payments/payments.component';
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
-    CanvasJSAngularChartsModule
+    CanvasJSAngularChartsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

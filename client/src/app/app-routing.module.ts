@@ -36,38 +36,38 @@ const routes: Routes = [
       },
       {
         path: 'chart-of-accounts',
-        component: ChartOfAccountsComponent
+        component: ChartOfAccountsComponent,
       },
       {
         path: 'income-statement',
-        component: IncomeStatementComponent
+        component: IncomeStatementComponent,
       },
       {
         path: 'cash-flow-statement',
-        component: CashFlowStatementComponent
+        component: CashFlowStatementComponent,
       },
       {
         path: 'balance-sheet',
-        component: BalanceSheetComponent
+        component: BalanceSheetComponent,
       },
       {
         path: 'invoice',
-        component: InvoiceComponent
+        component: InvoiceComponent,
       },
       {
         path: 'journal-entry',
-        component: JournalEntryComponent
+        component: JournalEntryComponent,
       },
       {
         path: 'payments',
-        component: PaymentsComponent
+        component: PaymentsComponent,
       },
-    ]
+    ],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

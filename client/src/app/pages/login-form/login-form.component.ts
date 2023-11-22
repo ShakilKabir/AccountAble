@@ -7,28 +7,34 @@ import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login-form',
-  templateUrl: './login-form.component.html'
+  templateUrl: './login-form.component.html',
 })
 export class LoginFormComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder,private authService: AuthService,private router: Router) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
     });
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      this.authService.login( email, password).subscribe(response => {
-        this.router.navigate(['/dashboard']);
-        console.log(this.loginForm.value);
-      }, error => {
-      });
+      this.authService.login(email, password).subscribe(
+        (response) => {
+          this.router.navigate(['/dashboard']);
+          console.log(this.loginForm.value);
+        },
+        (error) => {}
+      );
       this.loginForm.reset();
     }
   }

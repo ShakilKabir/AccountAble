@@ -5,13 +5,13 @@ import { formatDate } from '@angular/common';
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.component.html',
-  styles: []
+  styles: [],
 })
 export class PaymentsComponent implements OnInit {
   payables: any[] = [];
   receivables: any[] = [];
 
-  constructor(private transactionService: TransactionService) { }
+  constructor(private transactionService: TransactionService) {}
 
   ngOnInit(): void {
     this.loadTransactions();
@@ -21,7 +21,7 @@ export class PaymentsComponent implements OnInit {
     this.transactionService.getTransactions().subscribe(
       (data) => {
         this.extractPayablesAndReceivables(data);
-        console.log(data)
+        console.log(data);
       },
       (error) => {
         console.error('Error fetching transactions:', error);
@@ -30,49 +30,65 @@ export class PaymentsComponent implements OnInit {
   }
 
   extractPayablesAndReceivables(transactions: any[]): void {
-    this.payables = transactions.filter(t =>
-      t.isPaidOrReceived === false &&
-      t.credit_entries.some((e: any) => e.account_name === 'Accounts Payable')
-    ).map(payable => ({
-      ...payable,
-      amount: payable.credit_entries.find((e: any) => e.account_name === 'Accounts Payable').amount
-    }));
-  
-    this.receivables = transactions.filter(t =>
-      t.isPaidOrReceived === false &&
-      t.debit_entries.some((e: any) => e.account_name === 'Accounts Receivable')
-    ).map(receivable => ({
-      ...receivable,
-      amount: receivable.debit_entries.find((e: any) => e.account_name === 'Accounts Receivable').amount
-    }));
+    this.payables = transactions
+      .filter(
+        (t) =>
+          t.isPaidOrReceived === false &&
+          t.credit_entries.some(
+            (e: any) => e.account_name === 'Accounts Payable'
+          )
+      )
+      .map((payable) => ({
+        ...payable,
+        amount: payable.credit_entries.find(
+          (e: any) => e.account_name === 'Accounts Payable'
+        ).amount,
+      }));
+
+    this.receivables = transactions
+      .filter(
+        (t) =>
+          t.isPaidOrReceived === false &&
+          t.debit_entries.some(
+            (e: any) => e.account_name === 'Accounts Receivable'
+          )
+      )
+      .map((receivable) => ({
+        ...receivable,
+        amount: receivable.debit_entries.find(
+          (e: any) => e.account_name === 'Accounts Receivable'
+        ).amount,
+      }));
   }
-  
-  
 
   payPayable(payable: any) {
-    this.transactionService.updateTransactionStatus(payable._id, true).subscribe(
-      (response) => {
-        console.log('Payment successful:', response);
-        this.createTransactionForPayable(payable);
-        this.loadTransactions();
-      },
-      (error) => {
-        console.error('Error updating payment status:', error);
-      }
-    );
+    this.transactionService
+      .updateTransactionStatus(payable._id, true)
+      .subscribe(
+        (response) => {
+          console.log('Payment successful:', response);
+          this.createTransactionForPayable(payable);
+          this.loadTransactions();
+        },
+        (error) => {
+          console.error('Error updating payment status:', error);
+        }
+      );
   }
-  
+
   collectReceivable(receivable: any) {
-    this.transactionService.updateTransactionStatus(receivable._id, true).subscribe(
-      (response) => {
-        console.log('Collection successful:', response);
-        this.createTransactionForReceivable(receivable);
-        this.loadTransactions();
-      },
-      (error) => {
-        console.error('Error updating collection status:', error);
-      }
-    );
+    this.transactionService
+      .updateTransactionStatus(receivable._id, true)
+      .subscribe(
+        (response) => {
+          console.log('Collection successful:', response);
+          this.createTransactionForReceivable(receivable);
+          this.loadTransactions();
+        },
+        (error) => {
+          console.error('Error updating collection status:', error);
+        }
+      );
   }
 
   createTransactionForPayable(payable: any) {
@@ -80,11 +96,9 @@ export class PaymentsComponent implements OnInit {
       date: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
       description: 'Paid - ' + payable.description,
       debit_entries: [
-        { account_name: 'Accounts Payable', amount: payable.amount }
+        { account_name: 'Accounts Payable', amount: payable.amount },
       ],
-      credit_entries: [
-        { account_name: 'Cash', amount: payable.amount }
-      ],
+      credit_entries: [{ account_name: 'Cash', amount: payable.amount }],
       cash_flow_category: 'Operating',
       affects_cash: true,
     };
@@ -95,11 +109,9 @@ export class PaymentsComponent implements OnInit {
     const transaction = {
       date: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
       description: 'Received - ' + receivable.description,
-      debit_entries: [
-        { account_name: 'Cash', amount: receivable.amount }
-      ],
+      debit_entries: [{ account_name: 'Cash', amount: receivable.amount }],
       credit_entries: [
-        { account_name: 'Accounts Receivable', amount: receivable.amount }
+        { account_name: 'Accounts Receivable', amount: receivable.amount },
       ],
       cash_flow_category: 'Operating',
       affects_cash: true,
@@ -117,5 +129,4 @@ export class PaymentsComponent implements OnInit {
       }
     );
   }
-  
 }

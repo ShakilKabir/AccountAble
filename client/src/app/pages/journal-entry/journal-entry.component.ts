@@ -25,15 +25,19 @@ export class JournalEntryComponent implements OnInit {
   totalCredits: number = 0;
   journalForm: FormGroup;
 
-  constructor(private chartOfAccountsService: ChartOfAccountsService, private fb: FormBuilder, private transactionService: TransactionService) {
+  constructor(
+    private chartOfAccountsService: ChartOfAccountsService,
+    private fb: FormBuilder,
+    private transactionService: TransactionService
+  ) {
     this.journalForm = this.fb.group({
       date: new Date().toISOString().split('T')[0],
       description: '',
       cash_flow_category: 'None',
-      lines: this.fb.array([])
+      lines: this.fb.array([]),
     });
   }
-  
+
   get lines(): FormArray {
     return this.journalForm.get('lines') as FormArray;
   }
@@ -62,11 +66,17 @@ export class JournalEntryComponent implements OnInit {
 
         if (debit > 0 && credit !== 0) {
           line.credit = 0;
-          this.lines.at(lines.indexOf(line)).get('credit')!.setValue(0, { emitEvent: false });
+          this.lines
+            .at(lines.indexOf(line))
+            .get('credit')!
+            .setValue(0, { emitEvent: false });
         }
         if (credit > 0 && debit !== 0) {
           line.debit = 0;
-          this.lines.at(lines.indexOf(line)).get('debit')!.setValue(0, { emitEvent: false });
+          this.lines
+            .at(lines.indexOf(line))
+            .get('debit')!
+            .setValue(0, { emitEvent: false });
         }
 
         this.totalDebits += debit;
@@ -79,7 +89,7 @@ export class JournalEntryComponent implements OnInit {
     const lineFormGroup = this.fb.group({
       account: '',
       debit: 0,
-      credit: 0
+      credit: 0,
     });
     this.lines.push(lineFormGroup);
   }
@@ -98,7 +108,6 @@ export class JournalEntryComponent implements OnInit {
     );
   }
 
-
   onSaveEntry(): void {
     const formModel = this.journalForm.value;
 
@@ -107,18 +116,18 @@ export class JournalEntryComponent implements OnInit {
       description: formModel.description,
       cash_flow_category: formModel.cash_flow_category,
       debit_entries: formModel.lines
-        .filter((line:any) => line.debit > 0)
-        .map((line:any) => ({
+        .filter((line: any) => line.debit > 0)
+        .map((line: any) => ({
           account_name: line.account,
-          amount: line.debit
+          amount: line.debit,
         })),
       credit_entries: formModel.lines
-        .filter((line:any) => line.credit > 0)
-        .map((line:any) => ({
+        .filter((line: any) => line.credit > 0)
+        .map((line: any) => ({
           account_name: line.account,
-          amount: line.credit
+          amount: line.credit,
         })),
-      affects_cash: formModel.cash_flow_category !== 'None'
+      affects_cash: formModel.cash_flow_category !== 'None',
     };
     this.transactionService.addTransaction(transaction).subscribe({
       next: (response) => {
@@ -126,7 +135,7 @@ export class JournalEntryComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error saving transaction:', error);
-      }
+      },
     });
     console.log(this.journalEntry);
   }

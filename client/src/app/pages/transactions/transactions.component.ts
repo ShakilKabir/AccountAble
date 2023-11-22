@@ -68,6 +68,9 @@ export class TransactionsComponent implements OnInit {
     );
   }
   calculateTotalAmount(transaction: any): number {
-    return transaction.debit_entries.reduce((total:number, entry:any) => total + entry.amount, 0);
+    return transaction.debit_entries.reduce(
+      (total: number, entry: any) => total + entry.amount,
+      0
+    );
   }
 }

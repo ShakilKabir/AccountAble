@@ -1,4 +1,4 @@
 export class Entry {
-    account_name: string='';
-    amount: number =0;
+  account_name: string = '';
+  amount: number = 0;
 }

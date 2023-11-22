@@ -3,9 +3,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
-  styles: [
-  ]
+  styles: [],
 })
-export class InvoiceComponent {
-
-}
+export class InvoiceComponent {}

@@ -14,7 +14,7 @@ router.use(verifyToken);
 // GET all transactions for the logged-in user
 router.get("/", async (req, res) => {
   try {
-    const userId = new Types.ObjectId(req.userId as string); 
+    const userId = new Types.ObjectId(req.userId as string);
     const transactions = await Transaction.find({ user_id: userId });
     res.status(200).json(transactions);
   } catch (err) {
@@ -25,80 +25,77 @@ router.get("/", async (req, res) => {
 });
 
 // POST a new transaction
-router.post(
-  "/",
-  async (req, res) => {
-    try {
-      const {
-        date,
-        description,
-        debit_entries,
-        credit_entries,
-        cash_flow_category,
-        affects_cash,
-        isPaidOrReceived,
-        recurrence,
-      } = req.body;
-      const userId = new Types.ObjectId(req.userId as string);
+router.post("/", async (req, res) => {
+  try {
+    const {
+      date,
+      description,
+      debit_entries,
+      credit_entries,
+      cash_flow_category,
+      affects_cash,
+      isPaidOrReceived,
+      recurrence,
+    } = req.body;
+    const userId = new Types.ObjectId(req.userId as string);
 
-      const debitAccountDocuments = await Promise.all(
-        debit_entries.map((debitEntry:any) =>
-          ChartOfAccounts.findOne({
-            account_name: debitEntry.account_name,
-            user_id: userId,
-          })
-        )
-      );
-      const creditAccountDocuments = await Promise.all(
-        credit_entries.map((creditEntry:any) =>
-          ChartOfAccounts.findOne({
-            account_name: creditEntry.account_name,
-            user_id: userId,
-          })
-        )
-      );
+    const debitAccountDocuments = await Promise.all(
+      debit_entries.map((debitEntry: any) =>
+        ChartOfAccounts.findOne({
+          account_name: debitEntry.account_name,
+          user_id: userId,
+        })
+      )
+    );
+    const creditAccountDocuments = await Promise.all(
+      credit_entries.map((creditEntry: any) =>
+        ChartOfAccounts.findOne({
+          account_name: creditEntry.account_name,
+          user_id: userId,
+        })
+      )
+    );
 
-      if (
-        debitAccountDocuments.some((doc) => !doc) ||
-        creditAccountDocuments.some((doc) => !doc)
-      ) {
-        return res
-          .status(400)
-          .json({ message: "One or more accounts not found" });
-      }
+    if (
+      debitAccountDocuments.some((doc) => !doc) ||
+      creditAccountDocuments.some((doc) => !doc)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "One or more accounts not found" });
+    }
 
-      const newDebitEntries = debit_entries.map((entry:any, index:number) => ({
-        ...entry,
-        account_type: debitAccountDocuments[index]?._id as Types.ObjectId,
-      }));
-      const newCreditEntries = credit_entries.map((entry:any, index:number) => ({
+    const newDebitEntries = debit_entries.map((entry: any, index: number) => ({
+      ...entry,
+      account_type: debitAccountDocuments[index]?._id as Types.ObjectId,
+    }));
+    const newCreditEntries = credit_entries.map(
+      (entry: any, index: number) => ({
         ...entry,
         account_type: creditAccountDocuments[index]?._id as Types.ObjectId,
-      }));
+      })
+    );
 
-      const transactionData = {
-        date,
-        description,
-        debit_entries: newDebitEntries,
-        credit_entries: newCreditEntries,
-        user_id: userId,
-        cash_flow_category,
-        affects_cash,
-        isPaidOrReceived,
-        recurrence,
-      };
+    const transactionData = {
+      date,
+      description,
+      debit_entries: newDebitEntries,
+      credit_entries: newCreditEntries,
+      user_id: userId,
+      cash_flow_category,
+      affects_cash,
+      isPaidOrReceived,
+      recurrence,
+    };
 
-      const transaction = new Transaction(transactionData);
-      await transaction.save();
-      res.status(201).json(transaction); 
-    } catch (err) {
-      console.error(err); 
-      res
-        .status(500)
-        .json({ message: "Error creating transaction", error: err });
-    }
+    const transaction = new Transaction(transactionData);
+    await transaction.save();
+    res.status(201).json(transaction);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error creating transaction", error: err });
   }
-);
+});
 
 // router.put('/:transaction_id', async (req, res) => {
 //   try {
@@ -109,12 +106,14 @@ router.post(
 //   }
 // });
 
-router.patch('/:id/status', async (req, res) => {
+router.patch("/:id/status", async (req, res) => {
   const transactionId = req.params.id;
   const { isPaidOrReceived } = req.body;
 
-  if (typeof isPaidOrReceived !== 'boolean') {
-    return res.status(400).json({ message: "Invalid status provided. Must be a boolean value." });
+  if (typeof isPaidOrReceived !== "boolean") {
+    return res
+      .status(400)
+      .json({ message: "Invalid status provided. Must be a boolean value." });
   }
 
   try {
@@ -147,11 +146,9 @@ router.delete("/:transaction_id", async (req, res) => {
     for (const entry of transaction.debit_entries) {
       const account = await ChartOfAccounts.findById(entry.account_type);
       if (!account) {
-        return res
-          .status(404)
-          .send({
-            message: `Debit account not found for ID: ${entry.account_type}`,
-          });
+        return res.status(404).send({
+          message: `Debit account not found for ID: ${entry.account_type}`,
+        });
       }
       if (
         account.account_type === "Asset" ||
@@ -168,11 +165,9 @@ router.delete("/:transaction_id", async (req, res) => {
     for (const entry of transaction.credit_entries) {
       const account = await ChartOfAccounts.findById(entry.account_type);
       if (!account) {
-        return res
-          .status(404)
-          .send({
-            message: `Credit account not found for ID: ${entry.account_type}`,
-          });
+        return res.status(404).send({
+          message: `Credit account not found for ID: ${entry.account_type}`,
+        });
       }
       if (
         account.account_type === "Liability" ||
