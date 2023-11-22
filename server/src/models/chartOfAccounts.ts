@@ -118,12 +118,6 @@ export const initializeDefaultAccounts = async (userId: string) => {
     },
     {
       user_id: userId,
-      account_name: 'Interest Revenue',
-      account_type: 'Revenue',
-      description: 'Income earned from investments and interest-bearing accounts',
-    },
-    {
-      user_id: userId,
       account_name: 'Rent Expense',
       account_type: 'Expense',
       description: 'Periodic payments for rental of property or equipment',

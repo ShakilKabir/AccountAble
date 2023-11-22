@@ -56,10 +56,12 @@ export class HeroComponent {
   }
 
   onSubmit() {
+    console.log('heroRegisterForm', this.heroRegisterForm.value);
     if (this.heroRegisterForm.valid) {
       this.authService.register(this.heroRegisterForm.value).subscribe(response => {
         this.router.navigate(['/login']);
       }, error => {
+        console.log(error);
       });
     }
   }
