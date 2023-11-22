@@ -7,18 +7,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: []
+  styleUrls: [],
 })
 export class NavbarComponent implements OnInit {
+  constructor(private authService: AuthService, private router: Router) {}
 
-  constructor(private authService: AuthService, private router: Router) {
+  ngOnInit(): void {}
 
-  }
-
-  ngOnInit(): void {
-  }
-  
-  
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

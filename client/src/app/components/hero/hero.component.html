@@ -1,38 +1,83 @@
 <!-- hero.component.html -->
 
-<div class="bg-blue-50 h-full flex flex-col justify-center py-8">
-    <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between px-2">
-        <div class="sm:w-2/5 text-center sm:text-left mb-10 sm:mb-0">
-            <h1 class="text-5xl font-impact mb-6">Manage your money like a boss</h1>
-            <p class="text-gray-600 mb-8 text-lg font-medium">Create beautiful invoices, accept online payments, and make accounting easy—all in one place—with Wave’s suite of money tools.</p>
+<div class="bg-blue-50 h-full flex flex-col justify-center py-8 pt-12">
+  <div
+    class="container mx-auto flex flex-col sm:flex-row items-center justify-between px-2"
+  >
+    <div class="sm:w-2/5 text-center sm:text-left mb-10 sm:mb-0">
+      <h1 class="text-5xl font-impact mb-6">Balance your books like a boss</h1>
+      <p class="text-gray-600 mb-8 text-lg font-medium">
+        Make managing money straightforward with Accountable's accounting
+        features. Our tools turn complicated accounting into an easy, single
+        process.
+      </p>
 
-            <form [formGroup]="heroRegisterForm" (ngSubmit)="onSubmit()">
-                <div class="flex flex-col space-y-4 w-full max-w-md">
-                    <div>
-                        <label for="email" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Email</label>
-                        <input type="email" id="email" formcontrolname="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter your email" required>
-                    </div>
-                    <div>
-                        <label for="password" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Password</label>
-                        <input type="password" id="password" formcontrolname="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter your password" required>
-                    </div>
-                    <div>
-                        <label for="confirmPassword" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Confirm Password</label>
-                        <input type="password" id="confirmPassword" formcontrolname="confirmPassword" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Confirm your password" required>
-                    </div>
-                    <button type="submit" class="text-black bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-base px-5 py-2.5 text-center mr-2 mb-2">Create your free account</button>
-                </div>
-            </form>
-
-            <p class="text-gray-500 text-sm mt-6">By signing up, you are indicating that you have read and agree to the
-                <a href="#" class="underline">Terms of Use</a>
-                and
-                <a href="#" class="underline">Privacy Policy</a>.</p>
+      <form [formGroup]="heroRegisterForm" (ngSubmit)="onSubmit()">
+        <div class="flex flex-col space-y-4 w-full max-w-md">
+          <div>
+            <label
+              for="email"
+              class="block mb-2 text-base font-medium text-gray-900 dark:text-white"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="email"
+              formcontrolname="email"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="password"
+              class="block mb-2 text-base font-medium text-gray-900 dark:text-white"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="password"
+              formcontrolname="password"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="confirmPassword"
+              class="block mb-2 text-base font-medium text-gray-900 dark:text-white"
+              >Confirm Password</label
+            >
+            <input
+              type="password"
+              id="confirmPassword"
+              formcontrolname="confirmPassword"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Confirm your password"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="text-black bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-base px-5 py-2.5 text-center mr-2 mb-2"
+          >
+            Create your free account
+          </button>
         </div>
+      </form>
 
-        <div class="sm:w-3/5 mt-10 sm:mt-0 flex justify-center">
-            <div id="lottie" class="w-full h-[40rem]"></div>
-        </div>
-
+      <p class="text-gray-500 text-sm mt-6">
+        By signing up, you are indicating that you have read and agree to the
+        <a href="#" class="underline">Terms of Use</a>
+        and
+        <a href="#" class="underline">Privacy Policy</a>.
+      </p>
     </div>
+
+    <div class="sm:w-3/5 mt-10 sm:mt-0 flex justify-center">
+      <div id="lottie" class="w-full h-[40rem]"></div>
+    </div>
+  </div>
 </div>

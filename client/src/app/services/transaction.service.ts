@@ -35,6 +35,24 @@ export class TransactionService {
     return this.http.post(this.apiUrl, transaction, httpOptions);
   }
 
+  updateTransactionStatus(
+    transactionId: string,
+    isPaidOrReceived: boolean
+  ): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'x-access-token':
+          JSON.parse(localStorage.getItem('currentUser') || '{}').token || '',
+      }),
+    };
+    return this.http.patch(
+      `${this.apiUrl}/${transactionId}/status`,
+      { isPaidOrReceived },
+      httpOptions
+    );
+  }
+
   deleteTransaction(id: string): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -88,7 +106,6 @@ export class TransactionService {
     return this.http.get(`${this.apiUrl}/balance-sheet`, httpOptions);
   }
 
-  
   getBalanceSheetByDate(date: string): Observable<any> {
     const formattedDate = formatDate(date, 'yyyy-MM-dd', 'en-US');
     const httpOptions = {

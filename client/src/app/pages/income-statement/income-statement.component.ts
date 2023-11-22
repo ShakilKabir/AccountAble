@@ -81,7 +81,7 @@ export class IncomeStatementComponent implements OnInit {
       .filter((transaction) => {
         const transactionDate = new Date(transaction.date);
         const start = new Date(startDate);
-        const end = new Date(endDate);
+        const end = new Date(endDate + 'T23:59:59Z');
         return transactionDate >= start && transactionDate <= end;
       })
       .flatMap((transaction) =>

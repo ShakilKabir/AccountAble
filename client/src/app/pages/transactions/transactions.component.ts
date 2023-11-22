@@ -4,7 +4,6 @@ import { TransactionService } from 'src/app/services/transaction.service';
 import { TransactionFormComponent } from './../../components/transaction-form/transaction-form.component';
 import { Component, OnInit } from '@angular/core';
 
-
 @Component({
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
@@ -15,25 +14,33 @@ export class TransactionsComponent implements OnInit {
   public showIncomeModal = false;
   public showExpenseModal = false;
   public showJournalModal = false;
+  public showDetailModal = false;
+  public currentTransactionDetails: any = null;
 
   get isAnyModalOpen(): boolean {
-    return this.showIncomeModal || this.showExpenseModal || this.showJournalModal;
+    return (
+      this.showIncomeModal || this.showExpenseModal || this.showDetailModal
+    );
   }
 
   toggleIncomeModal() {
-      this.showIncomeModal = !this.showIncomeModal;
+    this.showIncomeModal = !this.showIncomeModal;
   }
 
   toggleExpenseModal() {
-      this.showExpenseModal = !this.showExpenseModal;
+    this.showExpenseModal = !this.showExpenseModal;
   }
 
   toggleJournalModal() {
-      this.showJournalModal = !this.showJournalModal;
+    this.showJournalModal = !this.showJournalModal;
   }
 
-  constructor(private transactionService: TransactionService) { }
+  openDetailModal(transaction: any): void {
+    this.currentTransactionDetails = transaction;
+    this.showDetailModal = true;
+  }
 
+  constructor(private transactionService: TransactionService) {}
 
   ngOnInit(): void {
     this.loadTransactions();
@@ -41,10 +48,11 @@ export class TransactionsComponent implements OnInit {
 
   loadTransactions(): void {
     this.transactionService.getTransactions().subscribe(
-      data => {
+      (data) => {
         this.transactions = data;
+        console.log(data);
       },
-      error => {
+      (error) => {
         console.error('Error fetching transactions:', error);
       }
     );
@@ -54,9 +62,15 @@ export class TransactionsComponent implements OnInit {
       () => {
         this.loadTransactions();
       },
-      error => {
+      (error) => {
         console.error('Error deleting transaction:', error);
       }
+    );
+  }
+  calculateTotalAmount(transaction: any): number {
+    return transaction.debit_entries.reduce(
+      (total: number, entry: any) => total + entry.amount,
+      0
     );
   }
 }

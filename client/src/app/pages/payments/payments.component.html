@@ -1,0 +1,68 @@
+<div class="p-8 px-20">
+  <!-- Section Heading -->
+  <div class="flex justify-center items-center p-4 mb-10 border-b">
+    <h1 class="font-impact text-4xl">Payments</h1>
+  </div>
+
+  <!-- Payables Table -->
+  <div class="overflow-x-auto relative mb-10">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Payables</h2>
+    <table class="w-full text-sm text-left text-gray-500">
+      <thead class="text-sm text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="py-3 px-6">Date</th>
+          <th scope="col" class="py-3 px-6">Amount</th>
+          <th scope="col" class="py-3 px-6" style="width: 50%">Description</th>
+          <th scope="col" class="py-3 px-6 pl-10">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="bg-white border-b" *ngFor="let payable of payables">
+          <td class="py-4 px-6">{{ payable.date | date }}</td>
+          <td class="py-4 px-6">{{ payable.amount }}</td>
+          <td class="py-4 px-6 font-bold">{{ payable.description }}</td>
+          <td class="py-4 px-6">
+            <button
+              (click)="payPayable(payable)"
+              class="text-white bg-blue-500 w-[90px] hover:bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              type="button"
+            >
+              Pay
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Receivables Table -->
+  <div class="overflow-x-auto relative">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Receivables</h2>
+    <table class="w-full text-sm text-left text-gray-500">
+      <thead class="text-sm text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="py-3 px-6">Date</th>
+          <th scope="col" class="py-3 px-6">Amount</th>
+          <th scope="col" class="py-3 px-6" style="width: 50%">Description</th>
+          <th scope="col" class="py-3 px-6 pl-10">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="bg-white border-b" *ngFor="let receivable of receivables">
+          <td class="py-4 px-6">{{ receivable.date | date }}</td>
+          <td class="py-4 px-6">{{ receivable.amount }}</td>
+          <td class="py-4 px-6 font-bold">{{ receivable.description }}</td>
+          <td class="py-4 px-6">
+            <button
+              (click)="collectReceivable(receivable)"
+              class="text-white max-w-[90px] bg-green-500 hover:bg-green-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              type="button"
+            >
+              Collect
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

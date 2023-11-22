@@ -19,11 +19,11 @@ export class CashFlowStatementComponent implements OnInit {
     closingBalance: 0,
   };
 
-  startDate: string='';
-  endDate: string='';
+  startDate: string = '';
+  endDate: string = '';
   tempStartDate: string = '';
   tempEndDate: string = '';
-  
+
   constructor(private transactionService: TransactionService) {}
 
   ngOnInit() {
@@ -39,22 +39,25 @@ export class CashFlowStatementComponent implements OnInit {
   }
   updateReport(startDate?: string, endDate?: string) {
     this.transactionService.getCashFlowStatement(startDate, endDate).subscribe(
-      data => {
+      (data) => {
         this.cashFlowData = data;
-        console.log('Cash flow statement retrieved successfully', data)
+        console.log('Cash flow statement retrieved successfully', data);
       },
-      error => {
-        console.error('There was an error retrieving the cash flow statement', error);
+      (error) => {
+        console.error(
+          'There was an error retrieving the cash flow statement',
+          error
+        );
       }
     );
   }
-  
+
   exportAsPDF(divId: string) {
     const data = document.getElementById(divId);
-    html2canvas(data!).then(canvas => {
+    html2canvas(data!).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'pt', 'a4');
-      const imgProps= pdf.getImageProperties(imgData);
+      const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);

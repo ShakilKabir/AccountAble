@@ -2,29 +2,45 @@
 
 <div class="flex-grow p-10 overflow-y-aut">
   <!-- Main Content -->
-  <div class="flex-1 p-10 pt-2 bg-white rounded ">
+  <div class="flex-1 p-10 pt-2 bg-white rounded">
     <div class="flex justify-between items-center mb-6">
       <div>
-        <h2 class="font-impact text-4xl text-blue-700">Welcome to Wave!</h2>
+        <h2 class="font-impact text-4xl text-blue-700">
+          Welcome to AccountAble!
+        </h2>
       </div>
       <div class="relative">
-        <button routerLink="/transactions" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-          <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-              Create Transaction
+        <button
+          routerLink="/transactions"
+          class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800"
+        >
+          <span
+            class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+          >
+            Create Transaction
           </span>
         </button>
       </div>
     </div>
 
     <!-- Middle content section -->
-    <div *ngIf="hasTransactions; else noTransactionsTemplate" class="grid grid-cols-2 gap-6">
+    <div
+      *ngIf="hasTransactions; else noTransactionsTemplate"
+      class="grid grid-cols-2 gap-6"
+    >
       <div>
-        <canvasjs-chart [options]="currentAsset" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>    
-    </div>       
-      
+        <canvasjs-chart
+          [options]="currentAsset"
+          [styles]="{ width: '100%', height: '360px' }"
+        ></canvasjs-chart>
+      </div>
+
       <div>
-        <canvasjs-chart [options]="expenses" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>    
-    </div>       
+        <canvasjs-chart
+          [options]="expenses"
+          [styles]="{ width: '100%', height: '360px' }"
+        ></canvasjs-chart>
+      </div>
     </div>
 
     <ng-template #noTransactionsTemplate>
@@ -33,7 +49,13 @@
           You have no transactions yet!
         </h3>
         <div class="mt-5">
-          <button type="button" routerLink="/transactions" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-8 py-5 text-center mr-2 mb-2">Create Your First Transaction</button>
+          <button
+            type="button"
+            routerLink="/transactions"
+            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-8 py-5 text-center mr-2 mb-2"
+          >
+            Create Your First Transaction
+          </button>
         </div>
         <div id="lottie" class="h-80"></div>
       </div>
@@ -44,71 +66,71 @@
   <div class="text-3xl text-center text-black-400 font-impact my-8">
     Where Are You Currently?
   </div>
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-  <table class="w-full text-s font-bold text-left text-gray-500 dark:text-gray-400">
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table
+      class="w-full text-s font-bold text-left text-gray-500 dark:text-gray-400"
+    >
       <thead class="text-s text-gray-700 uppercase dark:text-gray-400">
-          <tr>
-              <th scope="col" class="px-6 py-3 bg-blue-100 dark:bg-gray-800">
-                  Cash at Hand
-              </th>
-              <th scope="col" class="px-6 py-3">
-                  Receivables
-              </th>
-              <th scope="col" class="px-6 py-3 bg-blue-100 dark:bg-gray-800">
-                  Payables
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Net Income
-              </th>
-              <th scope="col" class="px-6 py-3 bg-blue-100 dark:bg-gray-800">
-                  Quick Ratio
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Debt-to-equity ratio
-              </th>
-              <th scope="col" class="px-6 py-3 bg-blue-100 dark:bg-gray-800">
-                Profit Margin
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Return on Assets
-              </th>
-              <th scope="col" class="px-6 bg-blue-100 py-3">
-                Return on Equity
-              </th>
-          </tr>
+        <tr>
+          <th scope="col" class="px-6 py-3 bg-blue-100 dark:bg-gray-800">
+            Cash at Hand
+          </th>
+          <th scope="col" class="px-6 py-3">Receivables</th>
+          <th scope="col" class="px-6 py-3 bg-blue-100 dark:bg-gray-800">
+            Payables
+          </th>
+          <th scope="col" class="px-6 py-3">Net Income</th>
+          <th scope="col" class="px-6 py-3 bg-blue-100 dark:bg-gray-800">
+            Quick Ratio
+          </th>
+          <th scope="col" class="px-6 py-3">Debt-to-equity ratio</th>
+          <th scope="col" class="px-6 py-3 bg-blue-100 dark:bg-gray-800">
+            Profit Margin
+          </th>
+          <th scope="col" class="px-6 py-3">Return on Assets</th>
+          <th scope="col" class="px-6 bg-blue-100 py-3">Return on Equity</th>
+        </tr>
       </thead>
       <tbody>
         <tr class="border-b border-gray-200 dark:border-gray-700">
-            <td class="px-6 py-4 bg-blue-100 dark:bg-gray-800">
-                {{ financialRatios.cashAtHand | currency:'USD':'symbol':'1.0-0' }}
-            </td>
-            <td class="px-6 py-4">
-                {{ financialRatios.receivables | currency:'USD':'symbol':'1.0-0' }}
-            </td>
-            <td class="px-6 py-4 bg-blue-100 dark:bg-gray-800">
-                {{ financialRatios.payables | currency:'USD':'symbol':'1.0-0' }}
-            </td>
-            <td class="px-6 py-4">
-                {{ financialRatios.netIncome | currency:'USD':'symbol':'1.0-2' }}
-            </td>
-            <td class="px-6 py-4 bg-blue-100 dark:bg-gray-800">
-                {{ financialRatios.quickRatio | number:'1.1-2' }}
-            </td>
-            <td class="px-6 py-4">
-                {{ financialRatios.debtToEquityRatio | number:'1.1-2' }}
-            </td>
-            <td class="px-6 py-4 bg-blue-100 dark:bg-blue-100">
-                {{ financialRatios.profitMargin | percent:'1.1-2' }}
-            </td>
-            <td class="px-6 py-4">
-                {{ financialRatios.returnOnAssets | percent:'1.1-2' }}
-            </td>
-            <td class="px-6 py-4 bg-blue-100 dark:bg-gray-800">
-                {{ financialRatios.returnOnEquity | percent:'1.1-2' }}
-            </td>
+          <td class="px-6 py-4 bg-blue-100 dark:bg-gray-800">
+            {{
+              financialRatios.cashAtHand | currency : "USD" : "symbol" : "1.0-0"
+            }}
+          </td>
+          <td class="px-6 py-4">
+            {{
+              financialRatios.receivables
+                | currency : "USD" : "symbol" : "1.0-0"
+            }}
+          </td>
+          <td class="px-6 py-4 bg-blue-100 dark:bg-gray-800">
+            {{
+              financialRatios.payables | currency : "USD" : "symbol" : "1.0-0"
+            }}
+          </td>
+          <td class="px-6 py-4">
+            {{
+              financialRatios.netIncome | currency : "USD" : "symbol" : "1.0-2"
+            }}
+          </td>
+          <td class="px-6 py-4 bg-blue-100 dark:bg-gray-800">
+            {{ financialRatios.quickRatio | number : "1.1-2" }}
+          </td>
+          <td class="px-6 py-4">
+            {{ financialRatios.debtToEquityRatio | number : "1.1-2" }}
+          </td>
+          <td class="px-6 py-4 bg-blue-100 dark:bg-blue-100">
+            {{ financialRatios.profitMargin | percent : "1.1-2" }}
+          </td>
+          <td class="px-6 py-4">
+            {{ financialRatios.returnOnAssets | percent : "1.1-2" }}
+          </td>
+          <td class="px-6 py-4 bg-blue-100 dark:bg-gray-800">
+            {{ financialRatios.returnOnEquity | percent : "1.1-2" }}
+          </td>
         </tr>
       </tbody>
-  </table>
-</div>
-
+    </table>
+  </div>
 </div>

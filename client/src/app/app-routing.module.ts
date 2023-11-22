@@ -15,6 +15,7 @@ import { CashFlowStatementComponent } from './pages/cash-flow-statement/cash-flo
 import { BalanceSheetComponent } from './pages/balance-sheet/balance-sheet.component';
 import { InvoiceComponent } from './pages/invoice/invoice.component';
 import { JournalEntryComponent } from './pages/journal-entry/journal-entry.component';
+import { PaymentsComponent } from './pages/payments/payments.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,34 +36,38 @@ const routes: Routes = [
       },
       {
         path: 'chart-of-accounts',
-        component: ChartOfAccountsComponent
+        component: ChartOfAccountsComponent,
       },
       {
         path: 'income-statement',
-        component: IncomeStatementComponent
+        component: IncomeStatementComponent,
       },
       {
         path: 'cash-flow-statement',
-        component: CashFlowStatementComponent
+        component: CashFlowStatementComponent,
       },
       {
         path: 'balance-sheet',
-        component: BalanceSheetComponent
+        component: BalanceSheetComponent,
       },
       {
         path: 'invoice',
-        component: InvoiceComponent
+        component: InvoiceComponent,
       },
       {
         path: 'journal-entry',
-        component: JournalEntryComponent
+        component: JournalEntryComponent,
       },
-    ]
+      {
+        path: 'payments',
+        component: PaymentsComponent,
+      },
+    ],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

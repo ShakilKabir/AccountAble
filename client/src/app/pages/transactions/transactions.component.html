@@ -1,6 +1,6 @@
 <!-- transactions.component.html -->
 
-<div class="flex-grow p-8 overflow-y-auto" [class.blur]="isAnyModalOpen">
+<div class="flex-grow p-8 overflow-y-auto px-20" [class.blur]="isAnyModalOpen">
   <div class="flex justify-center mb-6 mt-4">
     <span class="font-impact text-4xl">Transactions</span>
   </div>
@@ -8,11 +8,26 @@
   <!-- Transaction Total and Actions -->
   <div class="flex justify-between mb-6">
     <div>
-      <button (click)="toggleIncomeModal()" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Add Income</button>
-      <button (click)="toggleExpenseModal()" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Add Expense</button>
+      <button
+        (click)="toggleIncomeModal()"
+        class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+      >
+        Add Income
+      </button>
+      <button
+        (click)="toggleExpenseModal()"
+        class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+      >
+        Add Expense
+      </button>
     </div>
 
-    <button (click)="toggleJournalModal()" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Add Journal Transaction</button>
+    <button
+      routerLink="/journal-entry"
+      class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+    >
+      Add Journal Transaction
+    </button>
   </div>
 
   <div class="overflow-auto max-h-[calc(100vh-20rem)]">
@@ -21,9 +36,7 @@
         <tr class="bg-gray-200">
           <th class="py-2 px-4 border-b">Date</th>
           <th class="py-2 px-4 border-b">Description</th>
-          <th class="py-2 px-4 border-b">Debit</th>
-          <th class="py-2 px-4 border-b">Credit</th>
-          <th class="py-2 px-4 border-b">Amount</th>
+          <th class="py-2 px-4 border-b">Total Amount</th>
           <th class="py-2 px-4 border-b">Actions</th>
         </tr>
       </thead>
@@ -32,16 +45,27 @@
           <td class="py-2 px-4 border-b">
             {{ transaction.date | date : "mediumDate" }}
           </td>
-          <td class="py-2 px-4 border-b">{{ transaction.description }}</td>
-          <td class="py-2 px-4 border-b">
-            {{ transaction.debit_account_name }}
+          <td class="py-2 px-4 border-b max-w-xl font-bold">
+            {{ transaction.description }}
           </td>
           <td class="py-2 px-4 border-b">
-            {{ transaction.credit_account_name }}
+            {{ calculateTotalAmount(transaction) | currency }}
           </td>
-          <td class="py-2 px-4 border-b">{{ transaction.amount }}</td>
           <td class="py-2 px-4 border-b">
-            <button (click)="deleteTransaction(transaction._id)" type="button" class="focus:outline-none text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
+            <button
+              (click)="openDetailModal(transaction)"
+              type="button"
+              class="focus:outline-none text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
+            >
+              Show More
+            </button>
+            <button
+              (click)="deleteTransaction(transaction._id)"
+              type="button"
+              class="focus:outline-none text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+            >
+              Delete
+            </button>
           </td>
         </tr>
       </tbody>
@@ -64,10 +88,17 @@
   (transactionAdded)="loadTransactions()"
 ></app-transaction-form>
 
-<app-transaction-form
+<app-transaction-detail-modal
+  *ngIf="showDetailModal"
+  [show]="showDetailModal"
+  [transaction]="currentTransactionDetails"
+  (close)="showDetailModal = false"
+></app-transaction-detail-modal>
+
+<!-- <app-transaction-form
   *ngIf="showJournalModal"
   [show]="showJournalModal"
   type="journal"
   (close)="toggleJournalModal()"
   (transactionAdded)="loadTransactions()"
-></app-transaction-form>
+></app-transaction-form> -->
