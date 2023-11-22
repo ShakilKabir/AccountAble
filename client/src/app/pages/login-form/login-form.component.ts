@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './login-form.component.html',
 })
 export class LoginFormComponent implements OnInit {
+  errorMessage: string = '';
   loginForm!: FormGroup;
 
   constructor(
@@ -33,7 +34,10 @@ export class LoginFormComponent implements OnInit {
           this.router.navigate(['/dashboard']);
           console.log(this.loginForm.value);
         },
-        (error) => {}
+        (error) => {
+          this.errorMessage =
+            error.error.message || 'An error occurred during login';
+        }
       );
       this.loginForm.reset();
     }

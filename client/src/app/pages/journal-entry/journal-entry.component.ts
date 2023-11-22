@@ -28,7 +28,8 @@ export class JournalEntryComponent implements OnInit {
   constructor(
     private chartOfAccountsService: ChartOfAccountsService,
     private fb: FormBuilder,
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
+    private cdr: ChangeDetectorRef
   ) {
     this.journalForm = this.fb.group({
       date: new Date().toISOString().split('T')[0],
@@ -106,6 +107,20 @@ export class JournalEntryComponent implements OnInit {
       (sum: number, line: any) => sum + line.credit,
       0
     );
+  }
+
+  normalizeNumberInput(event: any, lineIndex: number, fieldName: string): void {
+    const input = event.target;
+    const normalizedValue = parseInt(input.value, 10);
+  
+    const control = this.lines.at(lineIndex).get(fieldName);
+    if (!isNaN(normalizedValue)) {
+      control?.setValue(normalizedValue, { emitEvent: true });
+    } else {
+      control?.setValue(0, { emitEvent: true });
+    }
+  
+    this.cdr.detectChanges();
   }
 
   onSaveEntry(): void {

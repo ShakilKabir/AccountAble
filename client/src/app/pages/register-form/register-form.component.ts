@@ -17,6 +17,7 @@ import { ConfirmPasswordValidator } from 'src/app/validators/confirm-password.va
 })
 export class RegisterFormComponent implements OnInit {
   registerForm!: FormGroup;
+  errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,6 +37,14 @@ export class RegisterFormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.errorMessage = '';
+    if (this.registerForm.invalid) {
+      if (this.registerForm.hasError('notSame')) {
+        this.errorMessage = 'Passwords do not match.';
+        return;
+      }
+      return;
+    }
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe(
         (response) => {
@@ -46,6 +55,8 @@ export class RegisterFormComponent implements OnInit {
       console.log(this.registerForm.value);
       console.log('hello');
       this.registerForm.reset();
+    } else {
+      console.log('not valid');
     }
   }
 }

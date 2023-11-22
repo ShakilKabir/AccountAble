@@ -75,6 +75,9 @@
     >
       Sign Up
     </button>
+    <div *ngIf="errorMessage" class="text-red-500 mt-2">
+      {{ errorMessage }}
+    </div>
     <div class="mt-4 text-center">
       <p class="mt-2 text-sm">
         Already have a AccountAble account?

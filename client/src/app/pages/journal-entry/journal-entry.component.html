@@ -83,14 +83,24 @@
               <input
                 formControlName="debit"
                 type="number"
-                class="w-full p-2 border rounded bg-white"
+                [ngClass]="{
+                  'input-active': (line.get('debit')?.value ?? 0) == 0 || !(line.get('credit')?.value),
+                  'input-inactive': (line.get('credit')?.value ?? 0) > 0
+                }"
+                (input)="normalizeNumberInput($event, i, 'debit')"
+                class="w-full p-2 border rounded"
               />
             </td>
             <td class="border px-4 py-2">
               <input
                 formControlName="credit"
                 type="number"
-                class="w-full p-2 border rounded bg-white"
+                [ngClass]="{
+                  'input-active': (line.get('credit')?.value ?? 0) == 0 || !(line.get('debit')?.value),
+                  'input-inactive': (line.get('debit')?.value ?? 0) > 0
+                }"
+                (input)="normalizeNumberInput($event, i , 'credit')"
+                class="w-full p-2 border rounded"
               />
             </td>
             <td class="border text-center">
